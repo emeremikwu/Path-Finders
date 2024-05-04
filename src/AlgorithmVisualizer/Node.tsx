@@ -1,9 +1,16 @@
-import {ReactNode} from 'react'
+import { PropsWithChildren } from 'react'
+
 import './Node.css'
 
-function Node({children}: {children?: ReactNode}) {
+interface NodeProps {
+  id: string | undefined
+}
+
+function Node(props: PropsWithChildren<NodeProps>) {
+  const { id, children } = props
+
   return (
-    <div className='node'>{children}</div>
+    <div className='node' id={id}>{children}</div>
   )
 }
 

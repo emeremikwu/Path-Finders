@@ -1,5 +1,6 @@
 
 import { PropsWithChildren, useReducer, Reducer } from "react"
+import Node from "./Node"
 
 type Dimension = { rows: number, cols: number } | [number, number] | string
 type GridState = string[][]
@@ -63,12 +64,33 @@ function Grid(props: PropsWithChildren<GridProps>) {
   const { dimensions = { rows: 5, cols: 5 } } = props
   const initialGridState: GridState = createInitialGridState(dimensions);
 
-  const [gridNodes, setGridNodes] = useReducer<Reducer<GridState, Dimension>>(dimensionReducer, initialGridState)
+  const [gridNodes, setDimension] = useReducer<Reducer<GridState, Dimension>>(dimensionReducer, initialGridState)
 
-  console.log(gridNodes); 
+  //console.log(gridNodes);
 
   return (
-    <div id="Grid-Container"></div>
+    <>
+      <button onClick={() => { setDimension({ rows: 10, cols: 10 }) }}>10x10</button>
+      <div id="grid-container">
+        {
+          gridNodes.map((row, rowIndex) => {
+            const keyRef = `row-${rowIndex.toString()}`
+            return (
+              <div key={keyRef} id={keyRef}>
+                {
+                  row.map((node, colIndex) => {
+                    const indexRef = `${rowIndex.toString()}:${colIndex.toString()}`
+                    return (
+                      <Node key={indexRef} id={indexRef}>{node}</Node>
+                    )
+                  })
+                }
+              </div>
+            )
+          })
+        }
+      </div>
+    </>
   )
 }
 
