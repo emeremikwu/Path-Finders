@@ -1,13 +1,13 @@
-import Grid from './Grid'
-import '../styles/Grid.css'
+import Grid from './Grid';
+import './Grid.css';
  
-function AlgorithmVisualizer() {
+function index() {
   return (
     <>
-      <Grid />
+      <Grid dimension={[20,15]}/>
     </>
-  )
+  );
 }
 
 
-export default AlgorithmVisualizer
+export default index;

@@ -18,6 +18,9 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    "semi": ["error", "always"],
+    "prefer-arrow-callback": "error",
+    "arrow-spacing": ["error", { "before": true, "after": true }],
   },
   parserOptions: {
     ecmaVersion: 'latest',

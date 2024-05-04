@@ -1,0 +1,66 @@
+.node {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  /* border: 1px solid black; */
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+  /* transition: background-color 0.2s; */
+}
+
+.node.end-of-col {
+  border-right: 1px solid black;
+}
+
+.node.end-of-row {
+  border-bottom: 1px solid black;
+}
+
+.node.start {
+  background-color: green;
+}
+
+.node.end {
+  background-color: red;
+}
+
+.node.wall {
+  background-color: black;
+}
+
+.node.visited {
+  background-color: lightblue;
+}
+
+.node.shortest-path {
+  background-color: yellow;
+}
+
+/* Auto Generated Stuff, might need later */
+/* .node.weight {
+  background-color: lightgreen;
+}
+
+.node.weight-visited {
+  background-color: lightgreen;
+}
+
+.node.weight-shortest-path {
+  background-color: lightgreen;
+}
+
+.node.weight-wall {
+  background-color: lightgreen;
+}
+
+.node.weight-start {
+  background-color: lightgreen;
+}
+ */
+.row {
+  margin: -4px
+}
+
