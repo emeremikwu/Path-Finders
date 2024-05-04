@@ -1,7 +1,12 @@
-function index() {
+import Grid from "./Grid"
+
+function AlgorithmVisualizer() {
   return (
-    <div>index</div>
+    <>
+      <Grid />
+    </>
   )
 }
 
-export default index
+
+export default AlgorithmVisualizer
