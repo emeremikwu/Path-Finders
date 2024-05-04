@@ -1,0 +1,25 @@
+.node {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  /* border: 1px solid black; */
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+  /* transition: background-color 0.2s; */
+}
+
+.node.endOfCol {
+  border-right: 1px solid black;
+}
+
+.node.endOfRow {
+  border-bottom: 1px solid black;
+}
+
+.row {
+  margin: -4px
+}
+
