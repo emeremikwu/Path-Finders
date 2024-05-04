@@ -1,16 +1,22 @@
 import { PropsWithChildren } from 'react'
 
-import './Node.css'
-
 interface NodeProps {
   id: string | undefined
+  endOfRow?: boolean
+  endOfCol?: boolean
 }
 
 function Node(props: PropsWithChildren<NodeProps>) {
-  const { id, children } = props
+  const { id, children, endOfRow, endOfCol } = props
 
+  
+  const endOfRowClass = endOfRow ? " endOfRow" : ""
+  const endOfColClass = endOfCol ? " endOfCol" : ""
+  
+  const nodeClass = `node${endOfRowClass}${endOfColClass}`
+  
   return (
-    <div className='node' id={id}>{children}</div>
+    <div className={nodeClass} id={id}>{children}</div>
   )
 }
 

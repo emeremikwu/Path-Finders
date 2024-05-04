@@ -2,6 +2,8 @@
 import { PropsWithChildren, useReducer, Reducer } from "react"
 import Node from "./Node"
 
+
+// I'm probably gonna have to remove 90% of the useReducer stuff and just use useState.
 type Dimension = { rows: number, cols: number } | [number, number] | string
 type GridState = string[][]
 interface GridProps {
@@ -73,15 +75,22 @@ function Grid(props: PropsWithChildren<GridProps>) {
       <button onClick={() => { setDimension({ rows: 10, cols: 10 }) }}>10x10</button>
       <div id="grid-container">
         {
-          gridNodes.map((row, rowIndex) => {
+          gridNodes.map((columns, rowIndex) => {
             const keyRef = `row-${rowIndex.toString()}`
             return (
-              <div key={keyRef} id={keyRef}>
+              <div className="row" key={keyRef} id={keyRef} >
                 {
-                  row.map((node, colIndex) => {
+                  columns.map((node, colIndex) => {
                     const indexRef = `${rowIndex.toString()}:${colIndex.toString()}`
                     return (
-                      <Node key={indexRef} id={indexRef}>{node}</Node>
+                      <Node
+                        key={indexRef}
+                        id={indexRef}
+                        endOfRow={rowIndex === gridNodes.length-1}
+                        endOfCol={colIndex === columns.length-1}
+                      >
+                        {node}
+                      </Node>
                     )
                   })
                 }
