@@ -1,10 +1,25 @@
 
-import { PropsWithChildren } from "react";
+import React, { PropsWithChildren } from "react";
 import Node from "./Node";
-import useGrid, { Dimension } from "./useGrid";
+import useGrid, { Dimension, GridState } from "./useGrid";
+import { INodeAttributes } from "./NodeAttribute";
 
 interface GridProps {
   dimension?: Dimension
+}
+
+
+//dbg
+function setStartEndNodes(dispach: React.Dispatch<React.SetStateAction<GridState>>) {
+  dispach((prev) => {
+    const newArr: GridState = [...prev];
+    const centerRow = Math.floor(prev.length / 2);
+    const centerCol = Math.floor(prev[0].length / 2);
+
+    newArr[centerRow][centerCol].isStart = true;
+
+    return newArr;
+  });
 }
 
 function Grid(props: PropsWithChildren<GridProps>) {
@@ -13,10 +28,9 @@ function Grid(props: PropsWithChildren<GridProps>) {
 
   const { gridNodes, setGridNodes, updateGridDimension } = useGrid(dimension);
 
-  return (
-    <>
-      <button onClick={() => { updateGridDimension('8x8'); }}>update grid</button>
+  // setStartEndNodes(setGridNodes);
 
+  return (
       <div className="grid-container">
         <div className="grid-box">
           {
@@ -33,9 +47,8 @@ function Grid(props: PropsWithChildren<GridProps>) {
                           id={indexRef}
                           endOfRow={rowIndex === gridNodes.length - 1}
                           endOfCol={colIndex === columns.length - 1}
-                        >
-                          {node}
-                        </Node>
+                          node={node}
+                         />
                       );
                     })
                   }
@@ -45,7 +58,6 @@ function Grid(props: PropsWithChildren<GridProps>) {
           }
         </div>
       </div>
-    </>
   );
 }
 

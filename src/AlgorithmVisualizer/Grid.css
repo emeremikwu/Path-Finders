@@ -22,12 +22,12 @@
   /* transition: background-color 0.2s; */
 }
 
-.node.end-of-col {
-  border-right: 1px solid black;
-}
-
 .node.end-of-row {
   border-bottom: 1px solid black;
+}
+
+.node.end-of-col {
+  border-right: 1px solid black;
 }
 
 .node.start {

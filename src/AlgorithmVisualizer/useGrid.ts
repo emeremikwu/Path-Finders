@@ -1,12 +1,12 @@
 import { useState } from "react";
+import NodeAttributes, { INodeAttributes } from "./NodeAttribute";
 
 // I'm probably gonna have to remove 90% of the useReducer stuff and just use useState.
 interface DimensionObject { rows: number, cols: number }
 type DimensionArray = [number, number]
 type DimensionString = string
 export type Dimension = DimensionObject | DimensionArray | DimensionString
-
-type GridState = string[][]
+export type GridState = INodeAttributes[][]
 
 /**
  * Creates a grid of rows x cols 
@@ -15,7 +15,7 @@ type GridState = string[][]
  * @returns a 2D array of strings representing the grid (GridState)
  */
 function createGrid(rows: number, cols: number): GridState {
-  return Array<null>(rows).fill(null).map(() => Array<string>(cols).fill(""));
+  return Array<null>(rows).fill(null).map(() => Array<INodeAttributes>(cols).fill(Object.assign({}, NodeAttributes)));
 }
 
 /**
