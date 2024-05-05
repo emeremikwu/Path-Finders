@@ -1,3 +1,14 @@
+.grid-container {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid-box {
+  display: inline-block;
+}
+
 .node {
   display: inline-block;
   width: 25px;
