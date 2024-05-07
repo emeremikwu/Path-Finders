@@ -1,10 +1,9 @@
-import AlgorithmVisualizers from "./AlgorithmVisualizer"
+import AlgorithmVisualizers from './AlgorithmVisualizer';
 
 function App() {
-
   return (
     <AlgorithmVisualizers />
-  )
+  );
 }
 
-export default App
+export default App;
