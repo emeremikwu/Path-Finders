@@ -1,0 +1,28 @@
+.dimension-graph {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* .dimension-graph#horizontal-bar {
+} */
+
+.dimension-graph#vertical-bar {
+  writing-mode: vertical-lr;
+/* text-orientation: mixed; */
+}
+
+.dimension-graph#vertical-bar .text {
+  transform: rotate(180deg);
+}
+
+.dimension-graph .text{
+  text-align: center;
+  
+}
+
+hr {
+  border: 1px solid black;
+  margin: 0;
+  border-radius: 10px;
+}
+

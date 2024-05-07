@@ -1,26 +1,40 @@
-import { useState } from "react";
-import NodeAttributes, { INodeAttributes } from "./NodeAttribute";
+// TODO:
+import { useState, Dispatch, SetStateAction } from 'react';
+import { INodeAttributes, initializeWithLocation } from './NodeAttributes';
 
 // I'm probably gonna have to remove 90% of the useReducer stuff and just use useState.
 interface DimensionObject { rows: number, cols: number }
-type DimensionArray = [number, number]
-type DimensionString = string
-export type Dimension = DimensionObject | DimensionArray | DimensionString
-export type GridState = INodeAttributes[][]
+type DimensionArray = [number, number];
+type DimensionString = string;
+export type Dimension = DimensionObject | DimensionArray | DimensionString;
+export type GridState = INodeAttributes[][];
 
 /**
- * Creates a grid of rows x cols 
- * @param rows 
- * @param cols 
+ * Creates a grid of rows x cols
+ * @param rows
+ * @param cols
  * @returns a 2D array of strings representing the grid (GridState)
  */
 function createGrid(rows: number, cols: number): GridState {
-  return Array<null>(rows).fill(null).map(() => Array<INodeAttributes>(cols).fill(Object.assign({}, NodeAttributes)));
+  // Array<INodeAttributes>(cols).fill(Object.assign({}, NodeAttributes))
+
+  // this took me forever to properly annotate.
+  const attributeArray: GridState = Array.from<object, INodeAttributes[]>(
+    { length: rows },
+    (_rowObject, rowIndex) => (
+      Array.from<object, INodeAttributes>(
+        { length: cols },
+        (_colObject, colIndex) => initializeWithLocation(rowIndex, colIndex),
+      )
+    ),
+  );
+
+  return attributeArray;
 }
 
 /**
  * Checks if the dimension is a DimensionArray
- * @param dimension 
+ * @param dimension
  * @returns boolean
  */
 function isDimensionArray(dimension: Dimension): dimension is DimensionArray {
@@ -36,11 +50,10 @@ function isDimensionArray(dimension: Dimension): dimension is DimensionArray {
 
 /**
  * Checks if the dimension is a DimensionObject
- * @param dimension 
+ * @param dimension
  * @returns boolean
  */
 function isDimensionObject(dimension: Dimension): dimension is DimensionObject {
-
   if (typeof dimension !== 'object') return false;
 
   if (!('rows' in dimension) || !('cols' in dimension)) return false;
@@ -53,23 +66,22 @@ function isDimensionObject(dimension: Dimension): dimension is DimensionObject {
 }
 
 /**
- * Parses a dimension string, object, or array into a DimensionArray. Throws an error if the dimension is invalid.
- * @param dimension 
- * @param delimiter 
+ * Parses a dimension string, object, or array into a DimensionArray.
+ * Throws an error if the dimension is invalid.
+ * @param dimension
+ * @param delimiter
  * @returns DimensionArray
  */
 function parseDimension(dimension: Dimension, delimiter?: string): DimensionArray {
-
-  if (typeof dimension === "string") {
-    //const dimValidator = /^(?<rows>\d+)[x|X|](?<cols>\d+)$/
-    const dimValidator = new RegExp(`^(?<rows>\\d+)[x|X|${delimiter ?? ""}](?<cols>\\d+)$`);
+  if (typeof dimension === 'string') {
+    // const dimValidator = /^(?<rows>\d+)[x|X|](?<cols>\d+)$/
+    const dimValidator = new RegExp(`^(?<rows>\\d+)[x|X|${delimiter ?? ''}](?<cols>\\d+)$`);
     const match = dimension.match(dimValidator);
 
     if (match) {
       const { rows, cols } = match.groups as { rows: string, cols: string };
 
-      if (parseInt(rows) > 0 && parseInt(cols) > 0)
-        return [parseInt(rows), parseInt(cols)];
+      if (Number(rows) > 0 && Number(cols) > 0) { return [Number(rows), Number(cols)]; }
     }
   }
 
@@ -79,35 +91,37 @@ function parseDimension(dimension: Dimension, delimiter?: string): DimensionArra
 
   if (isDimensionObject(dimension)) {
     return [dimension.rows, dimension.cols];
-    
   }
 
-  throw new Error("Invalid dimension format");
+  throw new Error('Invalid dimension format');
 }
+
+const updateGridDimensions = (
+  dispatch: Dispatch<SetStateAction<GridState>>,
+) => (rows: number, cols: number): void => {
+  const [parsedRows, parsedCols] = parseDimension({ rows, cols });
+  dispatch(createGrid(parsedRows, parsedCols));
+};
 
 /**
  * Custom hook for managing a grid of nodes
- * @param dimensions 
- * @param delimiter 
+ * @param dimensions
+ * @param delimiter
  * @returns {gridNodes, setGridNodes, updateGridDimension}
  */
 function useGrid(dimensions: Dimension, delimiter?: string) {
-
   const [rows, cols] = parseDimension(dimensions, delimiter);
   const [gridNodes, setGridNodes] = useState<GridState>(createGrid(rows, cols));
 
-
-  //TODO - add functionality to keep track of currently occupied nodes. Maybe a calculateAreaOfUse function?
-  const updateGridDimension = (dimension: Dimension): void => {
-    const [rows, cols] = parseDimension(dimension);
-    setGridNodes(createGrid(rows, cols));
-    console.log(`Updated grid dimension to ${String(rows)}x${String(cols)}`);
-  };
+  /*
+  [ ] - add functionality to keep track of currently occupied nodes.
+        Maybe a calculateAreaOfUse function?
+   */
 
   return {
     gridNodes,
     setGridNodes,
-    updateGridDimension
+    updateDimensions: updateGridDimensions(setGridNodes),
   };
 }
 
