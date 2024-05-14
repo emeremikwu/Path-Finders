@@ -1,8 +1,9 @@
 import AlgorithmVisualizers from './AlgorithmVisualizer';
+import './App.css';
 
 function App() {
   return (
-    <AlgorithmVisualizers />
+    <AlgorithmVisualizers dimension="10x16" />
   );
 }
 

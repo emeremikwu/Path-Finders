@@ -1,61 +1,81 @@
 /* eslint-disable no-console */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { PropsWithChildren, MouseEvent } from 'react';
-import { GridState } from './useGrid';
-import { INodeAttributes } from './NodeAttributes';
+import { MouseEvent, useContext, useEffect } from 'react';
+import { GridContext, IGridContext } from '../Grid/useGrid';
+import { INodeAttributes, NodeType } from '../Grid/NodeAttributes';
 
 import './DevBar.css';
+import Grid from '../Grid/Grid';
 
-interface DevBarProps {
-  gridAccess: {
-    gridNodes: GridState,
-    dispatchFunction: React.Dispatch<React.SetStateAction<GridState>>
-  };
+function printDebugInfo(grid: Grid): void {
+  const dimensions = grid.shape;
+  const startSet: boolean = grid.startNodeSet;
+  const endSet: boolean = grid.endNodeSet;
+
+  const endpoints = grid.findEndpoints();
+
+  console.log(`Grid Dimensions: ${dimensions[0]}x${dimensions[1]}`);
+  console.log(`Start Node Set: ${startSet} Location: ${startSet ? `${endpoints[0]?.row}x${endpoints[0]?.col}` : ''}`);
+  console.log(`End Node Set: ${endSet} Location: ${endSet ? `${endpoints[1]?.row}x${endpoints[1]?.col}` : ''}`);
+  console.log(`Node Count: ${grid.nodeRegistry.length}`);
 }
 
-function printDebugInfo(gridState: GridState): void {
-  console.log(`Grid Dimensions: ${gridState.length}x${gridState[0].length}`);
-}
+function setEndpoints(event: MouseEvent<HTMLButtonElement>, dispach: React.Dispatch<React.SetStateAction<Grid>>): void {
+  const target = event.target as HTMLButtonElement;
+  target.disabled = true;
 
-function setEndpoints(event: MouseEvent, dispach: React.Dispatch<React.SetStateAction<GridState>>): void {
+  let centerRow: number;
+  let y1: number;
+  let y2: number;
+
   const modifiedNodes: INodeAttributes[] = [];
+
   dispach((prev) => {
-    const newGridState: GridState = [...prev];
-    const centerRow = Math.floor(prev.length / 2);
-    const colLength = prev[0].length;
+    centerRow = Math.floor(prev.nodes.length / 2);
+    const colLength = prev.nodes[0].length;
 
-    const y1 = Math.floor(colLength / 3) - 1;
-    const y2 = (Math.floor((colLength * 2) / 3));
+    y1 = Math.floor(colLength / 3) - 1;
+    y2 = (Math.floor((colLength * 2) / 3));
 
-    const startNode = newGridState[centerRow][y1];
-    const endNode = newGridState[centerRow][y2];
+    const startNode = prev.nodes[centerRow][y1];
+    const endNode = prev.nodes[centerRow][y2];
 
-    startNode.isStart = true;
-    endNode.isEnd = true;
+    startNode.type = NodeType.start;
+    endNode.type = NodeType.end;
 
     modifiedNodes.push(startNode, endNode);
 
-    return newGridState;
+    return prev;
   });
 
-  console.log(`Start Node: ${modifiedNodes[0].location.row}:${modifiedNodes[0].location.col}`);
-  console.log(`End Node: ${modifiedNodes[1].location.row}:${modifiedNodes[1].location.col}`);
+  console.log(`Start Node: ${centerRow!}:${y1!}`);
+  console.log(`End Node: ${centerRow!}:${y2!}`);
 }
 
-function DevBar({ gridAccess }: PropsWithChildren<DevBarProps>) {
-  const { dispatchFunction } = gridAccess;
+function breakpoint(grid): void {
+  // eslint-disable-next-line no-debugger
+  debugger;
+}
 
-  // TODO: disable button on click;
-  // const buttons = document.querySelectorAll('div > button[id][type="button"]');
+function DevBar() {
+  const GridContextObject = useContext<IGridContext | null>(GridContext);
 
+  if (!GridContextObject) {
+    throw new Error('GridContext is null');
+  }
+
+  const { grid, setGrid: dispatchFunction } = GridContextObject;
+
+  useEffect(() => {
+    console.log('Object modified');
+  }, [grid]);
   return (
     <div className="node-dev-tools">
       <div className="background-text glow">Dev Tools</div>
-      <button type="button" id="10" onClick={() => { printDebugInfo(gridAccess.gridNodes); }}>Print Debug Info</button>
-      {/* // [ ] - pressing this twice crashes, fix */}
-      <button type="button" id="20" onClick={(e) => { setEndpoints(e, dispatchFunction); }}>Set Endpionts </button>
-
+      <button className="dev-button" type="button" id="10" onClick={() => { printDebugInfo(grid); }}>Print Debug Info</button>
+      <button className="dev-button" type="button" id="20" onClick={(e) => { setEndpoints(e, dispatchFunction); }}>Set Endpionts </button>
+      <button className="dev-button" type="button" id="30" onClick={() => { breakpoint(grid); }}>Breakpoint</button>
       {/* <button type="button" onClick={() => { renderGridDimensions(gridNodes); }}>Render Grid Dimensions</button> */}
     </div>
   );

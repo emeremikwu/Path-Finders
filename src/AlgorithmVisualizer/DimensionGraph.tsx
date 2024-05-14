@@ -5,15 +5,16 @@ import React, {
   CSSProperties,
   ReactNode,
   useEffect,
+  useContext,
 } from 'react';
 
 import './DimensionGraph.css';
 import useScreenUpdate from '../utils/useScreenUpdate';
-
+import { GridContext, IGridContext } from '../Grid/useGrid';
 // type ShortDispach<T> = Dispatch<SetStateAction<T>>;
 
 interface DimensionGraphProps {
-  gridBoxRef: React.RefObject<HTMLDivElement>;
+  GridDisplayerRef: React.RefObject<HTMLDivElement>;
   xBarText?: string;
   yBarText?: string;
   // pointless right now but for the future
@@ -30,13 +31,21 @@ const DefaultCSSProperties: CSSProperties = {
 };
 
 function DimensionGraph({
-  gridBoxRef, xBarText, yBarText, xBarChildren, yBarChildren,
+  GridDisplayerRef: gridBoxRef, xBarText, yBarText, xBarChildren, yBarChildren,
 }: DimensionGraphProps) {
   const [xBarOffset, setXBarOffset] = useState<CSSProperties>(DefaultCSSProperties);
   const [yBarOffset, setYBarOffset] = useState<CSSProperties>(DefaultCSSProperties);
   const screenUpdate = useScreenUpdate();
 
-  // const [gridOffsets, setGridOffsets] = useState<[number, number] | null>(null);
+  const GridContextObject = useContext<IGridContext | null>(GridContext);
+
+  if (!GridContextObject) {
+    throw new Error('GridContext is null');
+  }
+
+  const { grid } = GridContextObject;
+
+  const [gridLength, gridWidth] = grid.shape;
 
   useEffect(() => {
     const gridBoxReference = gridBoxRef.current ?? document.querySelector<HTMLDivElement>('.grid-box');
@@ -64,7 +73,6 @@ function DimensionGraph({
       setXBarOffset(DefaultCSSProperties);
       setYBarOffset(DefaultCSSProperties);
     }
-    console.log('bar function called');
   }, [gridBoxRef, screenUpdate]);
 
   return (
@@ -74,7 +82,7 @@ function DimensionGraph({
         { xBarChildren ?? (
         <div className="text">
           {
-            xBarText ?? 'x-bar'
+            xBarText ?? `x-bar | cols: ${gridWidth}`
           }
         </div>
         )}
@@ -85,7 +93,7 @@ function DimensionGraph({
         {yBarChildren ?? (
         <div className="text">
           {
-            yBarText ?? 'y-bar'
+            yBarText ?? `y-bar | rows: ${gridLength}`
           }
         </div>
         )}

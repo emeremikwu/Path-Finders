@@ -20,7 +20,8 @@
   
 }
 
-hr {
+.dimension-graph hr { 
+  color: var();
   border: 1px solid black;
   margin: 0;
   border-radius: 10px;

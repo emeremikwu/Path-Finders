@@ -1,52 +1,34 @@
 import { PropsWithChildren } from 'react';
-import { INodeAttributes, AssociatedCSSClass } from './NodeAttributes';
+import { INodeAttributes, NodeType } from '../Grid/NodeAttributes';
 import './Node.css';
 
 interface NodeProps {
   id: string | undefined
   endOfRow?: boolean
   endOfCol?: boolean
-  NodeAttributes: INodeAttributes
-}
-
-/**
- * Reduce function that returns the CSS class name for a Node based on its attributes
- * @param acc
- * @param classNameAcc
- * @param param1
- * @returns string
- */
-function NodeClassReducer(
-  classNameAcc: string,
-  [attrKey, attrValue]: [string, boolean],
-): string {
-  if (attrValue && attrKey in AssociatedCSSClass) {
-    return `${classNameAcc} ${AssociatedCSSClass[attrKey as keyof typeof AssociatedCSSClass]}`;
-  }
-  return classNameAcc; // Return the accumulator if no condition is met
+  nodeAttributes: INodeAttributes
 }
 
 function Node(props: PropsWithChildren<NodeProps>) {
   const {
-    id, endOfRow = false, endOfCol = false, NodeAttributes,
+    id, endOfRow = false, endOfCol = false, nodeAttributes,
   } = props;
 
-  // const nodeClass = "node";
+  const { type, visited, weight } = nodeAttributes;
 
-  let nodeClass: string = Object.entries(NodeAttributes).reduce(NodeClassReducer, 'node');
+  // nice and maintainable
+  const classNames = ['node'];
 
-  const endOfRowClass = endOfRow ? ' end-of-row' : '';
-  const endOfColClass = endOfCol ? ' end-of-col' : '';
-  nodeClass = nodeClass.concat(endOfRowClass, endOfColClass);
-
-  // debug
-  /*   if (Object.values(NodeAttributes).some((val) => typeof val === 'boolean' && val)) {
-    console.log(nodeClass);
+  if (type !== NodeType.default) {
+    classNames.push(type);
+    debugger;
   }
- */
-  // const nodeClass = `node${endOfRowClass}${endOfColClass}`;
-  // const nodeClass = `node${endOfRowClass}${endOfColClass}`;
+  if (visited) classNames.push('visited');
+  if (weight > 1) classNames.push(`weight-${weight}`);
+  if (endOfRow) classNames.push('end-of-row');
+  if (endOfCol) classNames.push('end-of-col');
 
+  const nodeClass = classNames.join(' ');
   return (
     <div className={nodeClass} id={id} />
   );

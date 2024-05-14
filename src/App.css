@@ -1,0 +1,13 @@
+body { 
+  /* background-color: rgb(24, 26, 27); */
+  /* color: white; */
+  line-height: normal !important;
+}
+
+hr {
+  /* border-color: white; */
+}
+
+* {
+  box-sizing: content-box !important;
+}

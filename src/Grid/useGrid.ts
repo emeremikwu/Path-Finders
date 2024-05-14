@@ -1,36 +1,14 @@
 // TODO:
-import { useState, Dispatch, SetStateAction } from 'react';
-import { INodeAttributes, initializeWithLocation } from './NodeAttributes';
+import {
+  useState, Dispatch, SetStateAction, createContext,
+} from 'react';
 
-// I'm probably gonna have to remove 90% of the useReducer stuff and just use useState.
-interface DimensionObject { rows: number, cols: number }
-type DimensionArray = [number, number];
-type DimensionString = string;
-export type Dimension = DimensionObject | DimensionArray | DimensionString;
-export type GridState = INodeAttributes[][];
-
-/**
- * Creates a grid of rows x cols
- * @param rows
- * @param cols
- * @returns a 2D array of strings representing the grid (GridState)
- */
-function createGrid(rows: number, cols: number): GridState {
-  // Array<INodeAttributes>(cols).fill(Object.assign({}, NodeAttributes))
-
-  // this took me forever to properly annotate.
-  const attributeArray: GridState = Array.from<object, INodeAttributes[]>(
-    { length: rows },
-    (_rowObject, rowIndex) => (
-      Array.from<object, INodeAttributes>(
-        { length: cols },
-        (_colObject, colIndex) => initializeWithLocation(rowIndex, colIndex),
-      )
-    ),
-  );
-
-  return attributeArray;
-}
+import Grid, {
+  DefaultNodeLocation,
+  Dimension, DimensionArray, DimensionObject,
+  NodeLocation,
+} from './Grid';
+import { NodeType } from './NodeAttributes';
 
 /**
  * Checks if the dimension is a DimensionArray
@@ -46,6 +24,14 @@ function isDimensionArray(dimension: Dimension): dimension is DimensionArray {
   if (dimension.some((val) => typeof val !== 'number' || val <= 0)) return false;
 
   return true;
+}
+
+export interface IGridContext {
+  grid: Grid
+  setGrid: Dispatch<SetStateAction<Grid>>
+  updateDimensions: (rows: number, cols: number) => void
+  setNode: (row: number, col: number, nodeType: NodeType, weight: number) => void
+
 }
 
 /**
@@ -72,7 +58,7 @@ function isDimensionObject(dimension: Dimension): dimension is DimensionObject {
  * @param delimiter
  * @returns DimensionArray
  */
-function parseDimension(dimension: Dimension, delimiter?: string): DimensionArray {
+export function parseDimension(dimension: Dimension, delimiter?: string): DimensionArray {
   if (typeof dimension === 'string') {
     // const dimValidator = /^(?<rows>\d+)[x|X|](?<cols>\d+)$/
     const dimValidator = new RegExp(`^(?<rows>\\d+)[x|X|${delimiter ?? ''}](?<cols>\\d+)$`);
@@ -97,10 +83,25 @@ function parseDimension(dimension: Dimension, delimiter?: string): DimensionArra
 }
 
 const updateGridDimensions = (
-  dispatch: Dispatch<SetStateAction<GridState>>,
+  dispatch: Dispatch<SetStateAction<Grid>>,
 ) => (rows: number, cols: number): void => {
   const [parsedRows, parsedCols] = parseDimension({ rows, cols });
-  dispatch(createGrid(parsedRows, parsedCols));
+  dispatch((prev) => {
+    prev.resizeGrid(parsedRows, parsedCols);
+    return prev;
+  });
+};
+
+const setGridNode = (
+  dispatch: Dispatch<SetStateAction<Grid>>,
+) => (row: number, col: number, nodeType: NodeType, weight: number) => {
+  dispatch((prev) => {
+    const location: NodeLocation = {
+      ...DefaultNodeLocation, row, col, startFromOne: true,
+    };
+    prev.setNode(location, nodeType, weight);
+    return prev;
+  });
 };
 
 /**
@@ -109,9 +110,10 @@ const updateGridDimensions = (
  * @param delimiter
  * @returns {gridNodes, setGridNodes, updateGridDimension}
  */
+
 function useGrid(dimensions: Dimension, delimiter?: string) {
   const [rows, cols] = parseDimension(dimensions, delimiter);
-  const [gridNodes, setGridNodes] = useState<GridState>(createGrid(rows, cols));
+  const [grid, setGrid] = useState<Grid>(new Grid(rows, cols));
 
   /*
   [ ] - add functionality to keep track of currently occupied nodes.
@@ -119,10 +121,20 @@ function useGrid(dimensions: Dimension, delimiter?: string) {
    */
 
   return {
-    gridNodes,
-    setGridNodes,
-    updateDimensions: updateGridDimensions(setGridNodes),
+    grid,
+    setGrid,
+    updateDimensions: updateGridDimensions(setGrid),
+    setNode: setGridNode(setGrid),
+
   };
 }
+
+/* export const GridContext = createContext<ReturnType<typeof useGrid>>({
+  gridNodes: [],
+  setGridNodes: () => {},
+  updateDimensions: () => {},
+}); */
+
+export const GridContext = createContext<IGridContext | null>(null);
 
 export default useGrid;
