@@ -2,18 +2,19 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { MouseEvent, useContext, useEffect } from 'react';
-import { GridContext, IGridContext } from '../Grid/useGrid';
-import { INodeAttributes, NodeType } from '../Grid/NodeAttributes';
+import { GridContext } from '../Grid/useGrid';
+import { INodeAttributes, NodeType } from '../Grid/nodeAttributes';
+import { IGrid, IGridContext } from '../Grid/grid.types';
+import { findEndpoints } from '../Grid/utils';
 
 import './DevBar.css';
-import Grid from '../Grid/Grid';
 
-function printDebugInfo(grid: Grid): void {
+function printDebugInfo(grid: IGrid): void {
   const dimensions = grid.shape;
   const startSet: boolean = grid.startNodeSet;
   const endSet: boolean = grid.endNodeSet;
 
-  const endpoints = grid.findEndpoints();
+  const endpoints = findEndpoints(grid);
 
   console.log(`Grid Dimensions: ${dimensions[0]}x${dimensions[1]}`);
   console.log(`Start Node Set: ${startSet} Location: ${startSet ? `${endpoints[0]?.row}x${endpoints[0]?.col}` : ''}`);
@@ -21,7 +22,7 @@ function printDebugInfo(grid: Grid): void {
   console.log(`Node Count: ${grid.nodeRegistry.length}`);
 }
 
-function setEndpoints(event: MouseEvent<HTMLButtonElement>, dispach: React.Dispatch<React.SetStateAction<Grid>>): void {
+function setEndpoints(event: MouseEvent<HTMLButtonElement>, dispach: React.Dispatch<React.SetStateAction<IGrid>>): void {
   const target = event.target as HTMLButtonElement;
   target.disabled = true;
 
@@ -32,28 +33,30 @@ function setEndpoints(event: MouseEvent<HTMLButtonElement>, dispach: React.Dispa
   const modifiedNodes: INodeAttributes[] = [];
 
   dispach((prev) => {
-    centerRow = Math.floor(prev.nodes.length / 2);
-    const colLength = prev.nodes[0].length;
+    const newGrid = { ...prev };
+    centerRow = Math.floor(newGrid.nodes.length / 2);
+    const colLength = newGrid.nodes[0].length;
 
     y1 = Math.floor(colLength / 3) - 1;
     y2 = (Math.floor((colLength * 2) / 3));
 
-    const startNode = prev.nodes[centerRow][y1];
-    const endNode = prev.nodes[centerRow][y2];
+    const startNode = newGrid.nodes[centerRow][y1];
+    const endNode = newGrid.nodes[centerRow][y2];
 
     startNode.type = NodeType.start;
     endNode.type = NodeType.end;
 
     modifiedNodes.push(startNode, endNode);
 
-    return prev;
+    return newGrid;
   });
 
   console.log(`Start Node: ${centerRow!}:${y1!}`);
   console.log(`End Node: ${centerRow!}:${y2!}`);
 }
 
-function breakpoint(grid): void {
+function breakpoint(grid: IGrid): void {
+  console.log('breakpoint', grid);
   // eslint-disable-next-line no-debugger
   debugger;
 }

@@ -10,7 +10,8 @@ import React, {
 
 import './DimensionGraph.css';
 import useScreenUpdate from '../utils/useScreenUpdate';
-import { GridContext, IGridContext } from '../Grid/useGrid';
+import { GridContext } from '../Grid/useGrid';
+import { IGridContext } from '../Grid/grid.types';
 // type ShortDispach<T> = Dispatch<SetStateAction<T>>;
 
 interface DimensionGraphProps {

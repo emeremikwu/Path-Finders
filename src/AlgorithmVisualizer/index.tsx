@@ -5,7 +5,7 @@ import DimensionGraph from './DimensionGraph';
 
 import './index.css';
 import GridDisplayer from './GridDisplayer';
-import { Dimension } from '../Grid/Grid';
+import { Dimension, IGridContext } from '../Grid/grid.types';
 
 interface IndexProps {
   dimension?: Dimension
@@ -21,12 +21,12 @@ function Index(props: PropsWithChildren<IndexProps>) {
   const { dimension = [20, 50] } = props;
 
   const {
-    grid, setGrid, setNode, updateDimensions,
+    grid, setGrid, setNode, getNode, updateDimensions,
   } = useGrid(dimension);
 
-  const memoizedProviderObj = useMemo(() => ({
-    grid, setGrid, setNode, updateDimensions,
-  }), [grid, setGrid, setNode, updateDimensions]);
+  const memoizedProviderObj = useMemo<IGridContext>(() => ({
+    grid, setGrid, updateDimensions, setNode, getNode,
+  }), [grid, setGrid, updateDimensions, setNode, getNode]);
 
   const gridDisplayerRef = useRef<HTMLDivElement>(null);
 

@@ -1,5 +1,6 @@
 import { ForwardedRef, forwardRef, useContext } from 'react';
-import { GridContext, IGridContext } from '../Grid/useGrid';
+import { GridContext } from '../Grid/useGrid';
+import { IGridContext } from '../Grid/grid.types';
 import Node from './Node';
 
 interface GridDisplayerProps {

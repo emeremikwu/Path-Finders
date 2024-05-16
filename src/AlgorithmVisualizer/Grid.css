@@ -1,0 +1,19 @@
+.grid-container {
+  position: relative;
+  padding: 30px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.grid-box {
+  display: inline-block;
+}
+
+
+.row {
+  margin: -4px
+}
+

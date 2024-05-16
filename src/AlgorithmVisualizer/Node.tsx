@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { INodeAttributes, NodeType } from '../Grid/NodeAttributes';
+import { INodeAttributes, NodeType } from '../Grid/nodeAttributes';
 import './Node.css';
 
 interface NodeProps {
@@ -21,7 +21,6 @@ function Node(props: PropsWithChildren<NodeProps>) {
 
   if (type !== NodeType.default) {
     classNames.push(type);
-    debugger;
   }
   if (visited) classNames.push('visited');
   if (weight > 1) classNames.push(`weight-${weight}`);
