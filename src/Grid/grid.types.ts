@@ -1,5 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
-import { INodeAttributes, NodeType } from './nodeAttributes';
+import { INodeAttributes } from './nodeAttributes';
 
 export interface DimensionObject { rows: number, cols: number }
 export type DimensionArray = [number, number];
@@ -41,10 +40,11 @@ export interface IGrid {
   nodeRegistry: NodeResistryEntry[];
 }
 
-export interface IGridContext {
+/* export interface IGridContext {
   grid: IGrid,
   setGrid: Dispatch<SetStateAction<IGrid>>
   updateDimensions: (rows: number, cols: number) => void
-  setNode: (row: number, col: number, nodeType: NodeType, weight: number) => void
+  setNode: (row: number, col: number, attributes: Partial<INodeAttributes>) => void
   getNode: (row: number, col: number, startFromOne: boolean) => NodeType
 }
+ */

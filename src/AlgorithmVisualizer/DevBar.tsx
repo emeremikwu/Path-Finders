@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { MouseEvent, useContext, useEffect } from 'react';
-import { GridContext } from '../Grid/useGrid';
+import { MouseEvent, useContext } from 'react';
+import { GridContext } from '../Grid/GridProvider';
 import { INodeAttributes, NodeType } from '../Grid/nodeAttributes';
-import { IGrid, IGridContext } from '../Grid/grid.types';
+import { IGrid } from '../Grid/grid.types';
 import { findEndpoints } from '../Grid/utils';
 
 import './DevBar.css';
@@ -62,17 +62,8 @@ function breakpoint(grid: IGrid): void {
 }
 
 function DevBar() {
-  const GridContextObject = useContext<IGridContext | null>(GridContext);
+  const { grid, setGrid: dispatchFunction } = useContext(GridContext);
 
-  if (!GridContextObject) {
-    throw new Error('GridContext is null');
-  }
-
-  const { grid, setGrid: dispatchFunction } = GridContextObject;
-
-  useEffect(() => {
-    console.log('Object modified');
-  }, [grid]);
   return (
     <div className="node-dev-tools">
       <div className="background-text glow">Dev Tools</div>

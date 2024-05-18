@@ -10,8 +10,7 @@ import React, {
 
 import './DimensionGraph.css';
 import useScreenUpdate from '../utils/useScreenUpdate';
-import { GridContext } from '../Grid/useGrid';
-import { IGridContext } from '../Grid/grid.types';
+import { GridContext } from '../Grid/GridProvider';
 // type ShortDispach<T> = Dispatch<SetStateAction<T>>;
 
 interface DimensionGraphProps {
@@ -38,13 +37,7 @@ function DimensionGraph({
   const [yBarOffset, setYBarOffset] = useState<CSSProperties>(DefaultCSSProperties);
   const screenUpdate = useScreenUpdate();
 
-  const GridContextObject = useContext<IGridContext | null>(GridContext);
-
-  if (!GridContextObject) {
-    throw new Error('GridContext is null');
-  }
-
-  const { grid } = GridContextObject;
+  const { grid } = useContext(GridContext);
 
   const [gridLength, gridWidth] = grid.shape;
 

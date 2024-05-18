@@ -1,35 +1,47 @@
-import { PropsWithChildren } from 'react';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import {
+  PropsWithChildren, RefObject, useCallback, useContext,
+} from 'react';
 import { INodeAttributes, NodeType } from '../Grid/nodeAttributes';
 import './Node.css';
+import { GridContext } from '../Grid/GridProvider';
 
 interface NodeProps {
   id: string | undefined
   endOfRow?: boolean
   endOfCol?: boolean
   nodeAttributes: INodeAttributes
+  setType: RefObject<NodeType>
 }
 
 function Node(props: PropsWithChildren<NodeProps>) {
+  const { setNode } = useContext(GridContext);
   const {
-    id, endOfRow = false, endOfCol = false, nodeAttributes,
+    id, endOfRow = false, endOfCol = false, nodeAttributes, setType,
   } = props;
-
   const { type, visited, weight } = nodeAttributes;
 
+  const clickHandler = useCallback(() => {
+    const [currentRow, currentCol] = id!.split(':').map((val) => Number(val));
+    const attributes: Partial<INodeAttributes> = { type: setType.current!, weight: 1 };
+
+    setNode(currentRow, currentCol, attributes);
+    console.log(`Node ${id} clicked. Current set type: ${setType.current}`);
+  }, [id, setType, setNode]);
+
   // nice and maintainable
-  const classNames = ['node'];
+  const nodeClass = ['node'];
 
-  if (type !== NodeType.default) {
-    classNames.push(type);
-  }
-  if (visited) classNames.push('visited');
-  if (weight > 1) classNames.push(`weight-${weight}`);
-  if (endOfRow) classNames.push('end-of-row');
-  if (endOfCol) classNames.push('end-of-col');
+  if (type !== NodeType.default) nodeClass.push(type);
+  if (visited) nodeClass.push('visited');
+  if (weight > 1) nodeClass.push(`weight-${weight}`);
+  if (endOfRow) nodeClass.push('end-of-row');
+  if (endOfCol) nodeClass.push('end-of-col');
 
-  const nodeClass = classNames.join(' ');
+  const joinedNodeClass = nodeClass.join(' ');
   return (
-    <div className={nodeClass} id={id} />
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+    <div className={joinedNodeClass} id={id} onClick={() => clickHandler()} />
   );
 }
 

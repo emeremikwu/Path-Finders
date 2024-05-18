@@ -1,17 +1,16 @@
 // TODO:
 import {
-  useState, Dispatch, SetStateAction, createContext,
+  useState, Dispatch, SetStateAction,
 } from 'react';
 
 import {
   Dimension,
   NodeLocation,
   IGrid,
-  IGridContext,
 
 } from './grid.types';
 import { createGrid, setNode } from './mutaters';
-import { NodeType } from './nodeAttributes';
+import { INodeAttributes, NodeType } from './nodeAttributes';
 import { DefaultNodeLocation } from './grid.defaults';
 import { getAbsoluteLocation, parseDimension } from './utils';
 
@@ -28,13 +27,13 @@ const updateGridDimensions = (
 
 const setGridNode = (
   dispatch: Dispatch<SetStateAction<IGrid>>,
-) => (row: number, col: number, nodeType: NodeType, weight: number) => {
+) => (row: number, col: number, attributes: Partial<INodeAttributes>) => {
   dispatch((prev) => {
     const newGrid = { ...prev };
     const location: NodeLocation = {
       ...DefaultNodeLocation, row, col, startFromOne: false,
     };
-    setNode(newGrid, location, nodeType, weight);
+    setNode(newGrid, location, attributes);
     return newGrid;
   });
 };
@@ -59,7 +58,7 @@ const getGridNode = (
  * @param delimiter
  * @returns {gridNodes, setGridNodes, updateGridDimension}
  */
-export const GridContext = createContext<IGridContext | null>(null);
+// export const GridContext = createContext<IGridContext | null>(null);
 
 function useGrid(dimensions: Dimension, delimiter?: string) {
   const [rows, cols] = parseDimension(dimensions, delimiter);
@@ -71,14 +70,15 @@ function useGrid(dimensions: Dimension, delimiter?: string) {
     updateDimensions: updateGridDimensions(setGrid),
     setNode: setGridNode(setGrid),
     getNode: getGridNode(grid),
-
   };
 }
-
-/* export const GridContext = createContext<ReturnType<typeof useGrid>>({
-  gridNodes: [],
-  setGridNodes: () => {},
-  updateDimensions: () => {},
+/*
+export const GridContext = createContext<ReturnType<typeof useGrid>>({
+  grid,
+  setGrid,
+  updateDimensions: updateGridDimensions(setGrid),
+  setNode: setGridNode(setGrid),
+  getNode: getGridNode(grid),
 }); */
 
 export default useGrid;
