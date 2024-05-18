@@ -105,8 +105,7 @@ export function getNode(grid: IGrid, location: NodeLocation): INodeAttributes | 
 export function setNode(
   grid: IGrid,
   location: NodeLocation,
-  type: NodeType,
-  weight = 1,
+  attributes: Partial<INodeAttributes>,
 ): NodeResistryEntry {
   // convert the location to an absolute location
   const [row, col] = getAbsoluteLocation(grid, location);
@@ -118,8 +117,8 @@ export function setNode(
   const { type: oldType } = node;
 
   // update the node
-  node.type = type;
-  node.weight = weight;
+
+  Object.assign(node, attributes);
 
   // update the endpoint if the node is a start or end node
   if (oldType === NodeType.start || oldType === NodeType.end) {

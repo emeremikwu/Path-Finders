@@ -1,11 +1,12 @@
 import { PropsWithChildren, useMemo, useRef } from 'react';
-import useGrid, { GridContext } from '../Grid/useGrid';
+import useGrid from '../Grid/useGrid';
 import DevBar from './DevBar';
 import DimensionGraph from './DimensionGraph';
 
 import './index.css';
 import GridDisplayer from './GridDisplayer';
-import { Dimension, IGridContext } from '../Grid/grid.types';
+import { Dimension } from '../Grid/grid.types';
+import GridProvider from '../Grid/GridProvider';
 
 interface IndexProps {
   dimension?: Dimension
@@ -24,7 +25,7 @@ function Index(props: PropsWithChildren<IndexProps>) {
     grid, setGrid, setNode, getNode, updateDimensions,
   } = useGrid(dimension);
 
-  const memoizedProviderObj = useMemo<IGridContext>(() => ({
+  const memoizedContextObject = useMemo(() => ({
     grid, setGrid, updateDimensions, setNode, getNode,
   }), [grid, setGrid, updateDimensions, setNode, getNode]);
 
@@ -32,13 +33,13 @@ function Index(props: PropsWithChildren<IndexProps>) {
 
   // setStartEndNodes(setGridNodes);
   return (
-    <GridContext.Provider value={memoizedProviderObj}>
+    <GridProvider gridContextObject={memoizedContextObject}>
       <div className="grid-container">
         <GridDisplayer ref={gridDisplayerRef} />
         <DimensionGraph GridDisplayerRef={gridDisplayerRef} />
       </div>
       <DevBar />
-    </GridContext.Provider>
+    </GridProvider>
   );
 }
 

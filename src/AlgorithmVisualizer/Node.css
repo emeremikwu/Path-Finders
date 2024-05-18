@@ -39,14 +39,15 @@
   background-color: yellow;
 }
 
+.node.weight-visited {
+  background-color: lightgreen;
+}
+
 /* Auto Generated Stuff, might need later */
 /* .node.weight {
   background-color: lightgreen;
 }
 
-.node.weight-visited {
-  background-color: lightgreen;
-}
 
 .node.weight-shortest-path {
   background-color: lightgreen;
