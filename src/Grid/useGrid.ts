@@ -7,10 +7,9 @@ import {
   Dimension,
   NodeLocation,
   IGrid,
-
 } from './grid.types';
 import { createGrid, setNode } from './mutaters';
-import { INodeAttributes, NodeType } from './nodeAttributes';
+import { INodeAttributes, NodeType } from './NodeAttributes';
 import { DefaultNodeLocation } from './grid.defaults';
 import { getAbsoluteLocation, parseDimension } from './utils';
 
@@ -72,13 +71,5 @@ function useGrid(dimensions: Dimension, delimiter?: string) {
     getNode: getGridNode(grid),
   };
 }
-/*
-export const GridContext = createContext<ReturnType<typeof useGrid>>({
-  grid,
-  setGrid,
-  updateDimensions: updateGridDimensions(setGrid),
-  setNode: setGridNode(setGrid),
-  getNode: getGridNode(grid),
-}); */
 
 export default useGrid;

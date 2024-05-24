@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { MouseEvent, useContext } from 'react';
 import { GridContext } from '../Grid/GridProvider';
-import { INodeAttributes, NodeType } from '../Grid/nodeAttributes';
+import { INodeAttributes, NodeType } from '../Grid/NodeAttributes';
 import { IGrid } from '../Grid/grid.types';
 import { findEndpoints } from '../Grid/utils';
 

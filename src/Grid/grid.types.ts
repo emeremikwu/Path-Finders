@@ -1,4 +1,4 @@
-import { INodeAttributes } from './nodeAttributes';
+import { INodeAttributes } from './NodeAttributes';
 
 export interface DimensionObject { rows: number, cols: number }
 export type DimensionArray = [number, number];

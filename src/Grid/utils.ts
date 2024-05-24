@@ -6,7 +6,7 @@ import {
   DimensionObject,
   Endpoints, IGrid, NodeBalanceArea, NodeLocation, NodeResistryEntry,
 } from './grid.types';
-import { INodeAttributes, NodeType } from './nodeAttributes';
+import { INodeAttributes, NodeType } from './NodeAttributes';
 
 /**
  * Check if the row and column are within the bounds of the grid
@@ -50,11 +50,17 @@ export function nodeIsRegistered(
 
 /**
  * Get the absolute location of a node in the grid
+ * @param grid grid object,
  * @param location location object containing the row and column
+ * @param {boolean} validateBounds check if the location is within bounds of the grid object
  * @returns [number, number]
  */
 // [ ] - reorganize the parameters to be more consistent
-export function getAbsoluteLocation(grid: IGrid, location: NodeLocation): [number, number] {
+export function getAbsoluteLocation(
+  grid: IGrid,
+  location: NodeLocation,
+  validateBounds = true,
+): [number, number] {
   let { row, col } = { ...DefaultNodeLocation, ...location };
   const { startFromOne, reverseRowIndex } = location;
 
@@ -71,7 +77,11 @@ export function getAbsoluteLocation(grid: IGrid, location: NodeLocation): [numbe
     row = grid.shape[0] - row;
   }
 
-  checkBounds(grid, row, col, startFromOne);
+  /*
+    if the function is being called by an algorithm then we don't necessary need to check this
+    it could also potentially shave milliseconds of execution time
+  */
+  if (validateBounds) checkBounds(grid, row, col, startFromOne);
 
   return [row, col];
 }
@@ -211,6 +221,16 @@ export function parseDimension(dimension: Dimension, delimiter?: string): Dimens
   throw new Error('Invalid dimension format');
 }
 
+export function stringifyLocation(row: number, col: number): string {
+  return `${row.toString()}:${col.toString()}`;
+}
+
+export function stringifyLocationObject(location: NodeLocation): string {
+  if (location.row === undefined || location.col === undefined) {
+    throw new Error('Location object must contain row and col properties');
+  }
+  return stringifyLocation(location.row, location.col);
+}
 /**
  * Calculates the area of the grid that nodes are occupying.
  * This is useful for balancing the grid when adding or removing rows and columns

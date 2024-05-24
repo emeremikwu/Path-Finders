@@ -17,7 +17,7 @@ import {
   AddColPosition,
 } from './grid.types';
 
-import { INodeAttributes, initializeNode, NodeType } from './nodeAttributes';
+import { INodeAttributes, initializeNode, NodeType } from './NodeAttributes';
 import { getAbsoluteLocation, nodeIsRegistered } from './utils';
 
 /**

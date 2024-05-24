@@ -11,6 +11,7 @@ interface NodeProps {
   endOfRow?: boolean
   endOfCol?: boolean
   nodeAttributes: INodeAttributes
+  // references the node type to change to when the user clickes a node,
   setType: RefObject<NodeType>
 }
 

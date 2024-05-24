@@ -2,8 +2,9 @@ import {
   ForwardedRef, forwardRef, useContext, useRef,
 } from 'react';
 import Node from './Node';
-import { NodeType } from '../Grid/nodeAttributes';
+import { NodeType } from '../Grid/NodeAttributes';
 import { GridContext } from '../Grid/GridProvider';
+import { stringifyLocation } from '../Grid/utils';
 
 interface GridDisplayerProps {
   children?: never;
@@ -25,7 +26,8 @@ function GridDisplayer(_props: GridDisplayerProps, ref: ForwardedRef<HTMLDivElem
             <div className="grid-row" key={keyRef} id={keyRef}>
               {
                 columns.map((node, colIndex) => {
-                  const indexRef = `${rowIndex.toString()}:${colIndex.toString()}`;
+                  // const indexRef = `${rowIndex.toString()}:${colIndex.toString()}`;
+                  const indexRef = stringifyLocation(rowIndex, colIndex);
                   return (
                     <Node
                       key={indexRef}
