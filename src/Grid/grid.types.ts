@@ -1,4 +1,4 @@
-import { INodeAttributes } from './NodeAttributes';
+import { INodeAttributes, NodeType } from './NodeAttributes';
 
 export interface DimensionObject { rows: number, cols: number }
 export type DimensionArray = [number, number];
@@ -17,9 +17,9 @@ export interface NodeLocation {
 }
 
 export type Endpoints = [NodeLocation | undefined, NodeLocation | undefined];
-export type EndpointType = 'start' | 'end';
+export type EndpointType = NodeType.start | NodeType.end;
 
-export interface NodeResistryEntry {
+export interface NodeRegistryEntry {
   location: NodeLocation;
   node: INodeAttributes;
 }
@@ -37,7 +37,7 @@ export interface IGrid {
   endpoints: Endpoints;
   startNodeSet: boolean;
   endNodeSet: boolean;
-  nodeRegistry: NodeResistryEntry[];
+  nodeRegistry: NodeRegistryEntry[];
 }
 
 /* export interface IGridContext {

@@ -9,7 +9,7 @@ export enum Algorithm {
 
 export interface AlgorithmResult {
   algorithm: Algorithm,
-  shortestPath: NodeLocation[],
-  distance: number,
+  shortestPath?: NodeLocation[],
+  distance?: number,
   visitedNodes: NodeLocation[],
 }

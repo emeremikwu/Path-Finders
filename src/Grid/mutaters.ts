@@ -9,7 +9,7 @@ import {
   // Endpoints,
   // NodeBalanceArea,
   GridState,
-  NodeResistryEntry,
+  NodeRegistryEntry,
   NodeLocation,
   EndpointType,
   IGrid,
@@ -56,21 +56,21 @@ export function createGrid(rows: number, cols: number): IGrid {
 }
 
 export function updateEndpoint(oGrid: IGrid, type: EndpointType, location: NodeLocation): IGrid {
-  if (type !== 'start' && type !== 'end') {
+  if (type !== NodeType.start && type !== NodeType.end) {
     throw new Error("Invalid endpoint type. Must be 'start' or 'end'");
   }
 
   const grid = oGrid;
-  const index = type === 'start' ? 0 : 1;
+  const index = type === NodeType.start ? 0 : 1;
   const currentEndpoint = grid.endpoints[index];
 
-  if (currentEndpoint?.row !== undefined && currentEndpoint.col !== undefined) {
+  if (currentEndpoint?.row !== undefined && currentEndpoint?.col !== undefined) {
     const { row, col } = currentEndpoint;
     grid.nodes[row][col].type = NodeType.default;
   }
 
   grid.endpoints[index] = location;
-  if (type === 'start') {
+  if (type === NodeType.start) {
     grid.startNodeSet = true;
   } else {
     grid.endNodeSet = true;
@@ -106,22 +106,18 @@ export function setNode(
   grid: IGrid,
   location: NodeLocation,
   attributes: Partial<INodeAttributes>,
-): NodeResistryEntry {
+): NodeRegistryEntry {
   // convert the location to an absolute location
   const [row, col] = getAbsoluteLocation(grid, location);
 
   // get the node at the location
   const node = grid.nodes[row][col];
 
-  // retain oldType for updating the endpoint
-  const { type: oldType } = node;
-
   // update the node
-
   Object.assign(node, attributes);
 
   // update the endpoint if the node is a start or end node
-  if (oldType === NodeType.start || oldType === NodeType.end) {
+  if (node.type === NodeType.start || node.type === NodeType.end) {
     // we can cast it as a EndpointType because we know it's either start or end
     updateEndpoint(grid, node.type as EndpointType, location);
   }

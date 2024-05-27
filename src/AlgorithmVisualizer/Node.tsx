@@ -2,7 +2,7 @@
 import {
   PropsWithChildren, RefObject, useCallback, useContext,
 } from 'react';
-import { INodeAttributes, NodeType } from '../Grid/nodeAttributes';
+import { INodeAttributes, NodeType } from '../Grid/NodeAttributes';
 import './Node.css';
 import { GridContext } from '../Grid/GridProvider';
 

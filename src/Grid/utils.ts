@@ -4,7 +4,7 @@ import {
   Dimension,
   DimensionArray,
   DimensionObject,
-  Endpoints, IGrid, NodeBalanceArea, NodeLocation, NodeResistryEntry,
+  Endpoints, IGrid, NodeBalanceArea, NodeLocation, NodeRegistryEntry,
 } from './grid.types';
 import { INodeAttributes, NodeType } from './NodeAttributes';
 
@@ -44,7 +44,7 @@ function checkBounds(
 export function nodeIsRegistered(
   grid: IGrid,
   location: NodeLocation,
-): NodeResistryEntry | undefined {
+): NodeRegistryEntry | undefined {
   return grid.nodeRegistry.find((nodeEntry) => nodeEntry.location === location);
 }
 
@@ -56,8 +56,9 @@ export function nodeIsRegistered(
  * @returns [number, number]
  */
 // [ ] - reorganize the parameters to be more consistent
+// [ ] - update logic for reverseRowIndex and null grid
 export function getAbsoluteLocation(
-  grid: IGrid,
+  grid: IGrid | null,
   location: NodeLocation,
   validateBounds = true,
 ): [number, number] {
@@ -68,12 +69,16 @@ export function getAbsoluteLocation(
     throw new Error('Location inproperly initialized, requires node object or (row and col) ');
   }
 
+  if (grid === null && validateBounds) {
+    throw new Error('Grid object is required for bounds validation');
+  }
+
   if (startFromOne) {
     row -= 1;
     col -= 1;
   }
 
-  if (reverseRowIndex) {
+  if (reverseRowIndex && grid) {
     row = grid.shape[0] - row;
   }
 
@@ -81,7 +86,7 @@ export function getAbsoluteLocation(
     if the function is being called by an algorithm then we don't necessary need to check this
     it could also potentially shave milliseconds of execution time
   */
-  if (validateBounds) checkBounds(grid, row, col, startFromOne);
+  if (validateBounds && grid) checkBounds(grid, row, col, startFromOne);
 
   return [row, col];
 }
@@ -229,7 +234,9 @@ export function stringifyLocationObject(location: NodeLocation): string {
   if (location.row === undefined || location.col === undefined) {
     throw new Error('Location object must contain row and col properties');
   }
-  return stringifyLocation(location.row, location.col);
+
+  const tmp = getAbsoluteLocation(null, location, false);
+  return stringifyLocation(...tmp);
 }
 /**
  * Calculates the area of the grid that nodes are occupying.

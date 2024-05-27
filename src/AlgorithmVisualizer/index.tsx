@@ -1,4 +1,6 @@
-import { PropsWithChildren, useMemo, useRef } from 'react';
+import {
+  PropsWithChildren, useCallback, useMemo, useRef,
+} from 'react';
 import useGrid from '../Grid/useGrid';
 import DevBar from './DevBar';
 import DimensionGraph from './DimensionGraph';
@@ -7,6 +9,7 @@ import './index.css';
 import GridDisplayer from './GridDisplayer';
 import { Dimension } from '../Grid/grid.types';
 import GridProvider from '../Grid/GridProvider';
+import { useAlgorithm } from '../Algorithms';
 
 interface IndexProps {
   dimension?: Dimension
