@@ -1,11 +1,11 @@
-import { DefaultNodeLocation } from '../Grid/grid.defaults';
 import { IGrid, NodeLocation } from '../Grid/grid.types';
 import { getNode } from '../Grid/mutaters';
 import { NodeType } from '../Grid/NodeAttributes';
 import {
-  getAbsoluteLocation, stringifyLocation, stringifyLocationObject,
+  stringifyLocation, stringifyLocationObject,
 } from '../Grid/utils';
 import { Algorithm, AlgorithmResult } from './algorithms.types';
+import { getNeighbors } from './utils';
 // TODO - Implement Dikstra's Algorithm
 // [ ] - remove unknown and replace with AlgorithmResult
 
@@ -16,23 +16,6 @@ const priorityQueueComparator = (
   b: { distance: number },
 ) => a.distance - b.distance;
 
-function getNeighbors(grid: IGrid, node: NodeLocation): NodeLocation[] {
-  const neighbors: NodeLocation[] = [];
-
-  /*
-    not really necessary but insures that a node has a proper location,
-    and if we decided to modify how we access a node index we don't have to change much
-   */
-  const [row, col] = getAbsoluteLocation(grid, node, false);
-
-  if (row > 0) neighbors.push({ ...DefaultNodeLocation, row: row - 1, col });
-  if (row < rowCount - 1) neighbors.push({ ...DefaultNodeLocation, row: row + 1, col });
-  if (col > 0) neighbors.push({ ...DefaultNodeLocation, row, col: col - 1 });
-  if (col < colCount - 1) neighbors.push({ ...DefaultNodeLocation, row, col: col + 1 });
-
-  return neighbors;
-}
-
 /**
  * Priority Queue(min heap) based implementation for Dikstra's Algorithm
  * @param grid
@@ -40,9 +23,7 @@ function getNeighbors(grid: IGrid, node: NodeLocation): NodeLocation[] {
  * @param endLocation
  * @returns AlgorithmResult - shortest path, distance, visited nodes, ordered visited nodes
  */
-export async function dikstras(
-  grid: IGrid,
-): Promise<AlgorithmResult | null> {
+export async function dikstras(grid: IGrid): Promise<AlgorithmResult | null> {
   if (!grid.endpoints[0] || !grid.endpoints[1]) throw new Error('Start and end nodes must be set');
   // if ( === ) throw new Error('Start and end location cannot be the same');
   if (stringifyLocationObject(grid.endpoints[0]) === stringifyLocationObject(grid.endpoints[1])) throw new Error('Start and end location cannot be the same');

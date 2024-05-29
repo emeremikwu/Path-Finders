@@ -42,7 +42,9 @@ function Node(props: PropsWithChildren<NodeProps>) {
   const joinedNodeClass = nodeClass.join(' ');
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-    <div className={joinedNodeClass} id={id} onClick={() => clickHandler()} />
+    <div className={joinedNodeClass} id={id} onClick={() => clickHandler()}>
+      {weight > 1 ? weight : ''}
+    </div>
   );
 }
 

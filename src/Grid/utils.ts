@@ -6,6 +6,7 @@ import {
   DimensionObject,
   Endpoints, IGrid, NodeBalanceArea, NodeLocation, NodeRegistryEntry,
 } from './grid.types';
+
 import { INodeAttributes, NodeType } from './NodeAttributes';
 
 /**

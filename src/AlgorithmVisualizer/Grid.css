@@ -13,7 +13,7 @@
 }
 
 
-.row {
-  margin: -4px
+.grid-box .grid-row {
+  margin: -4px !important;
 }
 

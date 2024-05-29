@@ -5,7 +5,7 @@ import { MouseEvent, useContext, useEffect } from 'react';
 import { GridContext } from '../Grid/GridProvider';
 import { NodeType } from '../Grid/NodeAttributes';
 import { IGrid, NodeRegistryEntry } from '../Grid/grid.types';
-import { findEndpoints, getAbsoluteLocation } from '../Grid/utils';
+import { findEndpoints, getAbsoluteLocation, stringifyLocationObject } from '../Grid/utils';
 
 import './DevBar.css';
 import { useAlgorithm } from '../Algorithms';
@@ -78,7 +78,28 @@ function setRandomEndpoints(event: MouseEvent<HTMLButtonElement>, dispach: React
   });
 
   modifiedNodes.forEach((node) => {
-    console.log(`Node: ${node.location.row}:${node.location.col} Type: ${node.node.type}`);
+    console.log(`Node: ${stringifyLocationObject(node.location)} Type: ${node.node.type}`);
+  });
+}
+
+function setRandomWeights(event: MouseEvent<HTMLButtonElement>, dispach: React.Dispatch<React.SetStateAction<IGrid>>): void {
+  const target = event.target as HTMLButtonElement;
+  target.disabled = true;
+
+  dispach((prev) => {
+    const newGrid = { ...prev };
+    const [rows, cols] = [newGrid.nodes.length, newGrid.nodes[0].length];
+
+    for (let i = 0; i < rows; i += 1) {
+      for (let j = 0; j < cols; j += 1) {
+        const node = newGrid.nodes[i][j];
+        if (node.type !== NodeType.start && node.type !== NodeType.end) {
+          node.weight = Math.floor(Math.random() * 10) + 1;
+        }
+      }
+    }
+
+    return newGrid;
   });
 }
 
@@ -143,6 +164,7 @@ function DevBar() {
       <button className="dev-button" type="button" id="10" onClick={() => { printDebugInfo(grid); }}>Print Debug Info</button>
       {/* <button className="dev-button" type="button" id="20" onClick={(e) => { setEndpoints(e, dispatchFunction); }}>Set Endpoints </button> */}
       <button className="dev-button" type="button" id="20" onClick={(e) => { setRandomEndpoints(e, dispatchFunction); }}>Set Random Endpoints </button>
+      <button className="dev-button" type="button" id="30" onClick={(e) => { setRandomWeights(e, dispatchFunction); }}>Set Random Weights</button>
       <button className="dev-button" type="button" id="30" onClick={() => { breakpoint(grid); }}>Breakpoint</button>
       {/* eslint-disable-next-line @typescript-eslint/no-floating-promises */}
       <button className="dev-button" type="button" onClick={() => { runDikstras(); }} disabled={isRunning}>

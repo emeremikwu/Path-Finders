@@ -1,21 +1,26 @@
 import {
-  PropsWithChildren, useCallback, useMemo, useRef,
+  memo,
+  PropsWithChildren,
+  useMemo,
+  useRef,
+  useState,
 } from 'react';
 import useGrid from '../Grid/useGrid';
 import DevBar from './DevBar';
 import DimensionGraph from './DimensionGraph';
 
-import './index.css';
 import GridDisplayer from './GridDisplayer';
-import { Dimension } from '../Grid/grid.types';
 import GridProvider from '../Grid/GridProvider';
-import { useAlgorithm } from '../Algorithms';
+import GridController from './GridController';
+import { Dimension } from '../Grid/grid.types';
+import { Algorithm } from '../Algorithms/algorithms.types';
+
+import './index.css';
+import './Grid.css';
 
 interface IndexProps {
   dimension?: Dimension
 }
-
-// dbg
 
 function Index(props: PropsWithChildren<IndexProps>) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -28,15 +33,20 @@ function Index(props: PropsWithChildren<IndexProps>) {
     grid, setGrid, setNode, getNode, updateDimensions,
   } = useGrid(dimension);
 
+  const gridDisplayerRef = useRef<HTMLDivElement>(null);
+  const [currentAlgorithm, setAlgorithm] = useState(Algorithm.dijkstra);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
+
   const memoizedContextObject = useMemo(() => ({
     grid, setGrid, updateDimensions, setNode, getNode,
   }), [grid, setGrid, updateDimensions, setNode, getNode]);
 
-  const gridDisplayerRef = useRef<HTMLDivElement>(null);
+  const references = { setAlgorithm, setPlaybackSpeed };
 
   // setStartEndNodes(setGridNodes);
   return (
     <GridProvider gridContextObject={memoizedContextObject}>
+      <GridController references={references} />
       <div className="grid-container">
         <GridDisplayer ref={gridDisplayerRef} />
         <DimensionGraph GridDisplayerRef={gridDisplayerRef} />
@@ -46,4 +56,6 @@ function Index(props: PropsWithChildren<IndexProps>) {
   );
 }
 
-export default Index;
+const MemoizedIndex = memo(Index);
+
+export default MemoizedIndex;
