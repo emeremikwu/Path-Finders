@@ -1,10 +1,10 @@
 import { NodeLocation } from '../Grid/grid.types';
 
 export enum Algorithm {
-  dijkstra = 'dijkstra',
-  aStar = 'aStar',
-  bfs = 'bfs',
-  dfs = 'dfs',
+  dijkstra = 'Dijkstra',
+  aStar = 'A*',
+  bfs = 'Breath First Search',
+  dfs = 'Depth First Search',
 }
 
 export interface AlgorithmResult {

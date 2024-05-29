@@ -1,4 +1,5 @@
-import { useState } from 'react';
+// TODO:
+import { useCallback, useMemo, useState } from 'react';
 import { Algorithm, AlgorithmResult } from './algorithms.types';
 import { dikstras } from './Dikstras';
 import { IGrid } from '../Grid/grid.types';
@@ -7,8 +8,8 @@ export function useAlgorithm(grid: IGrid) {
   const [algorithm, setAlgorithm] = useState<Algorithm>(Algorithm.dijkstra);
   const [results, setResults] = useState<AlgorithmResult | null>(null);
   const [isRunning, setIsRunning] = useState(false);
-
-  const runAlgorithm = async () => {
+  // [ ] - isRunning doesn't work properly, when clicking run dikstras and it fails it doesn't reset
+  const runAlgorithm = useCallback(async () => {
     setIsRunning(true);
     switch (algorithm) {
       case Algorithm.dijkstra:
@@ -18,11 +19,17 @@ export function useAlgorithm(grid: IGrid) {
         break;
     }
     setIsRunning(false);
-  };
+  }, [algorithm, grid]);
 
-  return {
-    algorithm, setAlgorithm, results, runAlgorithm, isRunning,
-  };
+  const memoizedAlgorithmFunctions = useMemo(() => ({
+    algorithm,
+    setAlgorithm,
+    results,
+    runAlgorithm,
+    isRunning,
+  }), [algorithm, setAlgorithm, results, runAlgorithm, isRunning]);
+
+  return memoizedAlgorithmFunctions;
 }
 
 export default useAlgorithm;
