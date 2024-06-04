@@ -13,3 +13,15 @@ export interface AlgorithmResult {
   distance?: number,
   visitedNodes: NodeLocation[],
 }
+
+// A Star Data Structure
+
+export interface AStarDS {
+  f: number;
+  g: number;
+  h: number;
+  location: NodeLocation; // the location of itself
+  previousNode: NodeLocation | null;
+}
+
+export type HeuristicFN = (start: NodeLocation, end: NodeLocation) => number;

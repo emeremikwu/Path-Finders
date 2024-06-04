@@ -239,6 +239,54 @@ export function stringifyLocationObject(location: NodeLocation): string {
   const tmp = getAbsoluteLocation(null, location, false);
   return stringifyLocation(...tmp);
 }
+
+/* function calculateDAndD2(grid: IGrid): { D: number, D2: number } {
+  const horizontalVerticalWeights: number[] = [];
+  const diagonalWeights: number[] = [];
+
+  const { nodeRegistry } = grid;
+  // nodeRegistry[0].
+
+  // Iterate over each node in the grid
+  for (let row = 0; row < grid.nodes.length; row++) {
+    for (let col = 0; col < grid.nodes[row].length; col++) {
+      const currentNode = getNode(grid, { row, col });
+
+      // If the node exists and is not a wall
+      if (currentNode && currentNode.type !== NodeType.wall) {
+        const neighbors = getNeighbors(grid, { row, col });
+
+        // Iterate over neighbors to find weights of horizontal/vertical and diagonal moves
+        for (const neighbor of neighbors) {
+          const neighborNode = getNode(grid, neighbor);
+
+          // Calculate the difference in row and column indices
+          const dx = Math.abs(row - neighbor.row);
+          const dy = Math.abs(col - neighbor.col);
+
+          // If the difference in either dx or dy is 1, it's a horizontal/vertical move
+          if ((dx === 1 && dy === 0) || (dx === 0 && dy === 1)) {
+            if (neighborNode && neighborNode.type !== NodeType.wall) {
+              horizontalVerticalWeights.push(neighborNode.weight ?? 1);
+            }
+          }
+          // Otherwise, it's a diagonal move
+          else if (neighborNode && neighborNode.type !== NodeType.wall) {
+            diagonalWeights.push(neighborNode.weight ?? 1);
+          }
+        }
+      }
+    }
+  }
+
+  // Calculate average weights for horizontal/vertical and diagonal moves
+  const D =
+  horizontalVerticalWeights.reduce((acc, val) => acc + val, 0) / horizontalVerticalWeights.length;
+  const D2 = diagonalWeights.reduce((acc, val) => acc + val, 0) / diagonalWeights.length;
+
+  return { D, D2 };
+}
+ */
 /**
  * Calculates the area of the grid that nodes are occupying.
  * This is useful for balancing the grid when adding or removing rows and columns

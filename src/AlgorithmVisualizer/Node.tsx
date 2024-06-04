@@ -35,7 +35,7 @@ function Node(props: PropsWithChildren<NodeProps>) {
 
   if (type !== NodeType.default) nodeClass.push(type);
   if (visited) nodeClass.push('visited');
-  if (weight > 1) nodeClass.push(`weight-${weight}`);
+  // if (weight > 1) nodeClass.push(`weight-${weight}`);
   if (endOfRow) nodeClass.push('end-of-row');
   if (endOfCol) nodeClass.push('end-of-col');
 
@@ -43,7 +43,7 @@ function Node(props: PropsWithChildren<NodeProps>) {
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <div className={joinedNodeClass} id={id} onClick={() => clickHandler()}>
-      {weight > 1 ? weight : ''}
+      <span>{weight > 1 ? weight : ''}</span>
     </div>
   );
 }

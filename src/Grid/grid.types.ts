@@ -10,8 +10,8 @@ export type AddRowPosition = 'top' | 'bottom';
 export type AddColPosition = 'left' | 'right';
 
 export interface NodeLocation {
-  row?: number;
-  col?: number;
+  row: number;
+  col: number;
   startFromOne: boolean;
   reverseRowIndex?: boolean;
 }
@@ -31,6 +31,9 @@ export interface NodeBalanceArea {
   left: number;
 }
 
+/* type D = number;
+type Update = boolean;
+ */
 export interface IGrid {
   nodes: GridState;
   shape: DimensionArray;
@@ -38,6 +41,10 @@ export interface IGrid {
   startNodeSet: boolean;
   endNodeSet: boolean;
   nodeRegistry: NodeRegistryEntry[];
+  // D, D2 and the previous length of nodeRegistry
+  /* heuristics: [D, Update];
+  D: number;
+  D2: number; */
 }
 
 /* export interface IGridContext {

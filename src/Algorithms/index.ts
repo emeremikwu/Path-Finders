@@ -1,5 +1,5 @@
 import { useAlgorithm } from './useAlgorithm';
-import { dikstras } from './Dikstras';
+import { dikstras } from './dikstras';
 
 export {
   useAlgorithm,

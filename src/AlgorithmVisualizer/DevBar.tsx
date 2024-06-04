@@ -10,6 +10,7 @@ import { findEndpoints, getAbsoluteLocation, stringifyLocationObject } from '../
 import './DevBar.css';
 import { useAlgorithm } from '../Algorithms';
 import { setNode } from '../Grid/mutaters';
+import { Algorithm } from '../Algorithms/algorithms.types';
 
 function printDebugInfo(grid: IGrid): void {
   const dimensions = grid.shape;
@@ -113,7 +114,7 @@ function DevBar() {
   const { grid, setGrid: dispatchFunction } = useContext(GridContext);
 
   const {
-    isRunning, runAlgorithm, results,
+    isRunning, runAlgorithm, results, setAlgorithm,
   } = useAlgorithm(grid);
 
   useEffect(() => {
@@ -121,6 +122,10 @@ function DevBar() {
   }, [results]);
 
   const runDikstras = async () => {
+    await runAlgorithm();
+  };
+
+  const runAStar = async () => {
     await runAlgorithm();
   };
 
@@ -170,6 +175,12 @@ function DevBar() {
       <button className="dev-button" type="button" onClick={() => { runDikstras(); }} disabled={isRunning}>
         {isRunning ? 'Running' : 'Run'}
         {' Dikstras'}
+      </button>
+      <button className="dev-button" type="button" onClick={() => { setAlgorithm(Algorithm.aStar); }}>Set Algorithm to A*</button>
+      {/* eslint-disable-next-line @typescript-eslint/no-floating-promises */}
+      <button className="dev-button" type="button" onClick={() => { runAStar(); }} disabled={isRunning}>
+        {isRunning ? 'Running' : 'Run'}
+        {' A*'}
       </button>
       {/* <button type="button" onClick={() => { renderGridDimensions(gridNodes); }}>Render Grid Dimensions</button> */}
     </div>

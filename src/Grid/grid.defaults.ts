@@ -1,8 +1,8 @@
 import { IGrid, NodeLocation } from './grid.types';
 
 export const DefaultNodeLocation: NodeLocation = {
-  row: undefined,
-  col: undefined,
+  row: -1,
+  col: -1,
   startFromOne: false,
   reverseRowIndex: false,
 };
@@ -14,4 +14,6 @@ export const DefaultGridObject: IGrid = {
   startNodeSet: false,
   endNodeSet: false,
   nodeRegistry: [],
+  /* heuristics: [1, 1, 0], */
+
 };
