@@ -19,10 +19,13 @@ export interface NodeLocation {
 export type Endpoints = [NodeLocation | undefined, NodeLocation | undefined];
 export type EndpointType = NodeType.start | NodeType.end;
 
+type NodeCoordinate = string;
 export interface NodeRegistryEntry {
-  location: NodeLocation;
-  node: INodeAttributes;
+  location: NodeLocation,
+  attributes: Partial<INodeAttributes>
 }
+
+export type NodeRegistry = Map<NodeCoordinate, NodeRegistryEntry>;
 
 export interface NodeBalanceArea {
   top: number;
@@ -40,7 +43,7 @@ export interface IGrid {
   endpoints: Endpoints;
   startNodeSet: boolean;
   endNodeSet: boolean;
-  nodeRegistry: NodeRegistryEntry[];
+  nodeRegistry: NodeRegistry;
   // D, D2 and the previous length of nodeRegistry
   /* heuristics: [D, Update];
   D: number;

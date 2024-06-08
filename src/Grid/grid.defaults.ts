@@ -13,7 +13,7 @@ export const DefaultGridObject: IGrid = {
   endpoints: [undefined, undefined],
   startNodeSet: false,
   endNodeSet: false,
-  nodeRegistry: [],
+  nodeRegistry: new Map(),
   /* heuristics: [1, 1, 0], */
 
 };

@@ -3,7 +3,7 @@ import './App.css';
 
 function App() {
   return (
-    <AlgorithmVisualizers dimension="10x16" />
+    <AlgorithmVisualizers dimension="20x30" />
   );
 }
 

@@ -2,8 +2,8 @@
   display: inline-flex;  
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   /* border: 1px solid black; */
   border-top: 1px solid black;
   border-left: 1px solid black;
@@ -55,6 +55,10 @@
 
 .node.weight-visited {
   background-color: lightgreen;
+}
+
+.node span:empty::before {
+  content: '\00a0'; /* Non-breaking space to ensure height is maintained */
 }
 
 /* Auto Generated Stuff, might need later */

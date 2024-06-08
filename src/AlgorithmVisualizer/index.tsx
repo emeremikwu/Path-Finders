@@ -13,7 +13,7 @@ import GridDisplayer from './GridDisplayer';
 import GridProvider from '../Grid/GridProvider';
 import GridController from './GridController';
 import { Dimension } from '../Grid/grid.types';
-import { Algorithm } from '../Algorithms/algorithms.types';
+import { AlgorithmType } from '../Algorithms/algorithms.types';
 
 import './index.css';
 import './Grid.css';
@@ -34,8 +34,9 @@ function Index(props: PropsWithChildren<IndexProps>) {
   } = useGrid(dimension);
 
   const gridDisplayerRef = useRef<HTMLDivElement>(null);
-  const [currentAlgorithm, setAlgorithm] = useState(Algorithm.dijkstra);
+  const [currentAlgorithm, setAlgorithm] = useState(AlgorithmType.dijkstra);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  const nodeSelectorType = useRef();
 
   const memoizedContextObject = useMemo(() => ({
     grid, setGrid, updateDimensions, setNode, getNode,

@@ -4,7 +4,7 @@ import { NodeType } from '../Grid/NodeAttributes';
 import {
   stringifyLocation, stringifyLocationObject,
 } from '../Grid/utils';
-import { Algorithm, AlgorithmResult } from './algorithms.types';
+import { AlgorithmType, AlgorithmResult } from './algorithms.types';
 import { getNeighbors } from './utils';
 // TODO - Implement Dikstra's Algorithm
 // [ ] - remove unknown and replace with AlgorithmResult
@@ -41,7 +41,7 @@ export async function dikstras(grid: IGrid): Promise<AlgorithmResult | null> {
 
   // prepare the result object
   const result: AlgorithmResult = {
-    algorithm: Algorithm.dijkstra,
+    algorithm: AlgorithmType.dijkstra,
     visitedNodes: visitedNodesOrdered,
   };
 

@@ -3,14 +3,14 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { MouseEvent, useContext, useEffect } from 'react';
 import { GridContext } from '../Grid/GridProvider';
-import { NodeType } from '../Grid/NodeAttributes';
-import { IGrid, NodeRegistryEntry } from '../Grid/grid.types';
+import { INodeAttributes, NodeType } from '../Grid/NodeAttributes';
+import { IGrid, NodeLocation } from '../Grid/grid.types';
 import { findEndpoints, getAbsoluteLocation, stringifyLocationObject } from '../Grid/utils';
 
 import './DevBar.css';
 import { useAlgorithm } from '../Algorithms';
-import { setNode } from '../Grid/mutaters';
-import { Algorithm } from '../Algorithms/algorithms.types';
+import { clearNodes, setNode } from '../Grid/mutaters';
+import { AlgorithmType } from '../Algorithms/algorithms.types';
 
 function printDebugInfo(grid: IGrid): void {
   const dimensions = grid.shape;
@@ -22,7 +22,7 @@ function printDebugInfo(grid: IGrid): void {
   console.log(`Grid Dimensions: ${dimensions[0]}x${dimensions[1]}`);
   console.log(`Start Node Set: ${startSet} Location: ${startSet ? `${endpoints[0]?.row}x${endpoints[0]?.col}` : ''}`);
   console.log(`End Node Set: ${endSet} Location: ${endSet ? `${endpoints[1]?.row}x${endpoints[1]?.col}` : ''}`);
-  console.log(`Node Count: ${grid.nodeRegistry.length}`);
+  console.log(`Node Count: ${grid.nodeRegistry.size}`);
 }
 
 /* let centerRow: number;
@@ -59,14 +59,16 @@ let y2: number; */
   });
 } */
 
-function setRandomEndpoints(event: MouseEvent<HTMLButtonElement>, dispach: React.Dispatch<React.SetStateAction<IGrid>>): void {
-  const target = event.target as HTMLButtonElement;
+function setRandomEndpoints(_event: MouseEvent<HTMLButtonElement>, dispach: React.Dispatch<React.SetStateAction<IGrid>>): void {
+  /* const target = event.target as HTMLButtonElement;
   target.disabled = true;
+ */
 
-  const modifiedNodes: NodeRegistryEntry[] = [];
+  const modifiedNodes: ReturnType<typeof setNode>[] = [];
 
   dispach((prev) => {
     const newGrid = { ...prev };
+    clearNodes(newGrid, {}, true);
     const [rows, cols] = [newGrid.nodes.length, newGrid.nodes[0].length];
 
     const [x0, y0] = [Math.floor(Math.random() * rows), Math.floor(Math.random() * cols)];
@@ -79,13 +81,13 @@ function setRandomEndpoints(event: MouseEvent<HTMLButtonElement>, dispach: React
   });
 
   modifiedNodes.forEach((node) => {
-    console.log(`Node: ${stringifyLocationObject(node.location)} Type: ${node.node.type}`);
+    console.log(`Node: ${stringifyLocationObject(node.location)} Type: ${node.attributes.type}`);
   });
 }
 
-function setRandomWeights(event: MouseEvent<HTMLButtonElement>, dispach: React.Dispatch<React.SetStateAction<IGrid>>): void {
-  const target = event.target as HTMLButtonElement;
-  target.disabled = true;
+function setRandomWeights(_event: MouseEvent<HTMLButtonElement>, dispach: React.Dispatch<React.SetStateAction<IGrid>>): void {
+  /* const target = event.target as HTMLButtonElement;
+  target.disabled = true; */
 
   dispach((prev) => {
     const newGrid = { ...prev };
@@ -95,7 +97,9 @@ function setRandomWeights(event: MouseEvent<HTMLButtonElement>, dispach: React.D
       for (let j = 0; j < cols; j += 1) {
         const node = newGrid.nodes[i][j];
         if (node.type !== NodeType.start && node.type !== NodeType.end) {
-          node.weight = Math.floor(Math.random() * 10) + 1;
+          // node.weight = Math.floor(Math.random() * 10) + 1;
+          const weight = Math.floor(Math.random() * 10) + 1;
+          setNode(newGrid, { row: i, col: j, startFromOne: false }, { weight });
         }
       }
     }
@@ -111,40 +115,27 @@ function breakpoint(grid: IGrid): void {
 }
 
 function DevBar() {
-  const { grid, setGrid: dispatchFunction } = useContext(GridContext);
+  const { grid, setGrid: gridDispatch } = useContext(GridContext);
 
   const {
-    isRunning, runAlgorithm, results, setAlgorithm,
+    isRunning, runAlgorithm, results, algorithm,
   } = useAlgorithm(grid);
 
   useEffect(() => {
     if (results) console.log(results);
   }, [results]);
 
-  const runDikstras = async () => {
-    await runAlgorithm();
-  };
-
-  const runAStar = async () => {
-    await runAlgorithm();
-  };
-
-  // useEffect(() => {
-  //   if (results) {
-  //     grid;
-  //     debugger;
-  //   }
-  // }, [grid]);
-
-  useEffect(() => {
-    dispatchFunction((prev) => {
+  // statically displayed algorithnm
+  /* useEffect(() => {
+    setGrid((prev) => {
       const newGrid = { ...prev };
       if (results) {
         results.visitedNodes.forEach((location) => {
           const [row, col] = getAbsoluteLocation(newGrid, location, true);
           const currentNode = newGrid.nodes[row][col];
           if (currentNode.type !== NodeType.start && currentNode.type !== NodeType.end) {
-            currentNode.type = NodeType.visited;
+            // currentNode.type = NodeType.visited;
+            currentNode.visited = true;
           }
         });
 
@@ -161,28 +152,77 @@ function DevBar() {
 
       return newGrid;
     });
-  }, [dispatchFunction, results]);
+  }, [setGrid, results]); */
+
+  // animated algorithm;
+  useEffect(() => {
+    let interval: number;
+    if (results) {
+      const resultsCopy = { ...results };
+
+      const avoidStartEnd = (location: NodeLocation): boolean => {
+        const [row, col] = getAbsoluteLocation(grid, location, true);
+        const currentNode = grid.nodes[row][col];
+        return currentNode.type !== NodeType.start && currentNode.type !== NodeType.end;
+      };
+      resultsCopy.visitedNodes = resultsCopy.visitedNodes.filter(avoidStartEnd);
+      resultsCopy.shortestPath = resultsCopy.shortestPath?.filter(avoidStartEnd);
+
+      const visitedSpliceAmount = 4;
+      const shortestPathSpliceAmount = 1;
+      interval = setInterval(() => {
+        let location: NodeLocation[] | null;
+        let attributes: Partial<INodeAttributes> | null;
+
+        if (resultsCopy.visitedNodes.length > 0) {
+          location = resultsCopy.visitedNodes.splice(0, visitedSpliceAmount)!;
+          attributes = { visited: true };
+        } else if (resultsCopy.shortestPath && resultsCopy.shortestPath.length > 0) {
+          location = resultsCopy.shortestPath.splice(0, shortestPathSpliceAmount)!;
+          attributes = { type: NodeType.shortestPath };
+        } else {
+          location = null;
+          attributes = null;
+        }
+
+        if (location !== null && attributes !== null) {
+          gridDispatch((prev) => {
+            const newGrid = { ...prev };
+            setNode(newGrid, location, attributes);
+            return newGrid;
+          });
+        } else {
+          clearInterval(interval);
+        }
+      });
+    }
+
+    return () => { if (interval) clearInterval(interval); };
+  // we don't want grid here
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gridDispatch, results]);
 
   return (
     <div className="node-dev-tools">
       <div className="background-text glow">Dev Tools</div>
       <button className="dev-button" type="button" id="10" onClick={() => { printDebugInfo(grid); }}>Print Debug Info</button>
       {/* <button className="dev-button" type="button" id="20" onClick={(e) => { setEndpoints(e, dispatchFunction); }}>Set Endpoints </button> */}
-      <button className="dev-button" type="button" id="20" onClick={(e) => { setRandomEndpoints(e, dispatchFunction); }}>Set Random Endpoints </button>
-      <button className="dev-button" type="button" id="30" onClick={(e) => { setRandomWeights(e, dispatchFunction); }}>Set Random Weights</button>
+      <button className="dev-button" type="button" id="20" onClick={(e) => { setRandomEndpoints(e, gridDispatch); }}>Set Random Endpoints </button>
+      <button className="dev-button" type="button" id="30" onClick={(e) => { setRandomWeights(e, gridDispatch); }}>Set Random Weights</button>
       <button className="dev-button" type="button" id="30" onClick={() => { breakpoint(grid); }}>Breakpoint</button>
       {/* eslint-disable-next-line @typescript-eslint/no-floating-promises */}
-      <button className="dev-button" type="button" onClick={() => { runDikstras(); }} disabled={isRunning}>
-        {isRunning ? 'Running' : 'Run'}
-        {' Dikstras'}
-      </button>
-      <button className="dev-button" type="button" onClick={() => { setAlgorithm(Algorithm.aStar); }}>Set Algorithm to A*</button>
-      {/* eslint-disable-next-line @typescript-eslint/no-floating-promises */}
-      <button className="dev-button" type="button" onClick={() => { runAStar(); }} disabled={isRunning}>
-        {isRunning ? 'Running' : 'Run'}
-        {' A*'}
-      </button>
-      {/* <button type="button" onClick={() => { renderGridDimensions(gridNodes); }}>Render Grid Dimensions</button> */}
+
+      <form>
+        <select name="algorithm" id="algorithm-selector" title="Select Algorithm" onChange={(e) => { algorithm.current = e.target.value as AlgorithmType; }}>
+          {Object.values(AlgorithmType).map((algo) => (
+            <option key={algo} value={algo}>{algo}</option>
+          ))}
+        </select>
+        {/* eslint-disable-next-line @typescript-eslint/no-floating-promises */}
+        <button className="dev-button" type="button" onClick={() => { runAlgorithm(); }} disabled={isRunning}>
+          {isRunning ? 'Running' : 'Run'}
+        </button>
+      </form>
     </div>
   );
 }

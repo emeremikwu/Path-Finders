@@ -3,11 +3,11 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { Algorithm } from '../Algorithms/algorithms.types';
+import { AlgorithmType } from '../Algorithms/algorithms.types';
 
 interface GridControllerProps {
   references : {
-    setAlgorithm: React.Dispatch<React.SetStateAction<Algorithm>>,
+    setAlgorithm: React.Dispatch<React.SetStateAction<AlgorithmType>>,
     setPlaybackSpeed: React.Dispatch<React.SetStateAction<number>>,
   }
 }
@@ -21,7 +21,7 @@ function GridController({ references }: GridControllerProps) {
         <Nav className="me-auto">
           <NavDropdown title="Algorithms" id="basic-nav-dropdown">
             {
-              Object.values(Algorithm).map((algorithm) => (
+              Object.values(AlgorithmType).map((algorithm) => (
                 <NavDropdown.Item
                   key={algorithm}
                   onClick={() => { setAlgorithm(algorithm); }}

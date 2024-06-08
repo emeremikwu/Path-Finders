@@ -9,7 +9,6 @@ import {
   // Endpoints,
   // NodeBalanceArea,
   GridState,
-  NodeRegistryEntry,
   NodeLocation,
   EndpointType,
   IGrid,
@@ -18,7 +17,17 @@ import {
 } from './grid.types';
 
 import { INodeAttributes, initializeNode, NodeType } from './NodeAttributes';
-import { getAbsoluteLocation, nodeIsRegistered } from './utils';
+import { getAbsoluteLocation, stringifyLocationObject } from './utils';
+
+let mutateOriginal = false;
+
+export function setMuteteOriginal(value: boolean): void {
+  mutateOriginal = value;
+}
+
+export function getMutateOriginal(): boolean {
+  return mutateOriginal;
+}
 
 /**
  * Creates a 2 dimensional array of INodeAttributes (rows x cols)
@@ -155,52 +164,109 @@ export function getNode(grid: IGrid, location: NodeLocation): INodeAttributes | 
 }
 
 /**
- * Set the node at a given location in the grid
- * @param location the location of the node in the grid
- * @param type Node type
- * @param weight Node weight
- * @returns NodeResistryEntry
+ * Set the node at a given location or multiple locations in the grid
+ * @param grid The grid to update
+ * @param location The location or locations of the node in the grid
+ * @param attributes The attributes to update the node with
+ * @returns { location: NodeLocation | NodeLocation[], attributes: Partial<INodeAttributes>}
+ *  The location and attributes of the node that was updated
  */
 export function setNode(
   grid: IGrid,
-  location: NodeLocation,
+  location: NodeLocation | NodeLocation[],
   attributes: Partial<INodeAttributes>,
-): NodeRegistryEntry {
-  // convert the location to an absolute location
-  const [row, col] = getAbsoluteLocation(grid, location);
+): { location: NodeLocation | NodeLocation[], attributes: Partial<INodeAttributes> } {
+  // Destructure the attributes
+  const { type, weight, visited } = attributes;
+  const normalizedLocation = Array.isArray(location) ? location : [location];
 
-  // get the node at the location
-  const node = grid.nodes[row][col];
+  normalizedLocation.forEach((loc) => {
+    const [row, col] = getAbsoluteLocation(grid, loc);
+    const node = grid.nodes[row][col];
 
-  // update the node
-  Object.assign(node, attributes);
+    // Determine the final attributes for the node
+    const finalType = (type ?? node.type) === NodeType.default && (weight ?? node.weight) > 1
+      ? NodeType.weight
+      : type ?? node.type;
+    const finalWeight = weight ?? node.weight;
+    const finalVisited = visited ?? node.visited;
 
-  // update the endpoint if the node is a start or end node
-  if (node.type === NodeType.start || node.type === NodeType.end) {
-    // we can cast it as a EndpointType because we know it's either start or end
-    updateEndpoint(grid, node.type as EndpointType, location);
-  }
+    // Update the node attributes
+    Object.assign(node, {
+      type: finalType,
+      weight: finalWeight,
+      visited: finalVisited,
+    });
 
-  const registeredEntry = nodeIsRegistered(grid, location);
-
-  // check if the node is already registered
-  if (registeredEntry) {
-    // if I wrote the other functions correctly, this should never be true
-    if (
-      registeredEntry.location.row === row && registeredEntry.location.col === col
-      && registeredEntry.node !== node
-    ) {
-      const msg = `Node location mismatch. Node location is not the same as the occupied node's location. \nNode location: ${JSON.stringify(location)} \nOccupied node location: ${JSON.stringify(registeredEntry.location)}`;
-      throw new Error(msg);
+    // Update the endpoint if the node is a start or end node
+    if (finalType === NodeType.start || finalType === NodeType.end) {
+      updateEndpoint(grid, finalType as EndpointType, loc);
     }
+
+    // Determine if the node should be deleted from the registry
+    const toDelete = finalType === NodeType.default && finalWeight === 1 && !finalVisited;
+    // Update the node registry
+    const nodeKey = stringifyLocationObject(loc);
+
+    // clever but not easy to read
+    /* const params = toDelete ? [nodeKey] : [nodeKey, { location, node }];
+    grid.nodeRegistry[`${toDelete ? 'delete' : 'set'}`](...params); */
+
+    if (toDelete) {
+      grid.nodeRegistry.delete(nodeKey);
+    } else {
+      grid.nodeRegistry.set(nodeKey, { location: loc, attributes: node });
+    }
+  });
+
+  return { location, attributes };
+}
+
+interface NodeParams {
+  fullSearch?: boolean
+  type?: boolean;
+  visited?: boolean;
+  weight?: boolean;
+}
+
+/**
+ * Clear nodes in the grid based on specified parameters
+ * @param grid The grid to update
+ * @param params The parameters to clear nodes
+ * @param useCache Whether to use the node registry or or grid to clear all nodes
+ * @returns Updated grid
+ */
+export function clearNodes(grid: IGrid, params?: NodeParams, useCache = false): IGrid {
+  const { type, visited, weight } = params ?? {};
+
+  const resetObject: Partial<INodeAttributes> = {};
+
+  if (type === true || type === undefined) resetObject.type = NodeType.default;
+  if (visited === true || visited === undefined) resetObject.visited = false;
+  if (weight === true || weight === undefined) resetObject.weight = 1;
+
+  const fullClear = type && visited && weight;
+
+  if (useCache) {
+    // Clear nodes using the registry
+    grid.nodeRegistry.forEach(({ location }) => {
+      const node = grid.nodes[location.row][location.col];
+      Object.assign(node, resetObject);
+    });
   } else {
-    grid.nodeRegistry.push({
-      location,
-      node,
+    // Clear all nodes in the grid
+    grid.nodes.forEach((row) => {
+      row.forEach((node) => {
+        Object.assign(node, resetObject);
+      });
     });
   }
 
-  return { location, node };
+  if (fullClear) {
+    grid.nodeRegistry.clear();
+  }
+
+  return grid;
 }
 
 /**

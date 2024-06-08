@@ -4,7 +4,7 @@ import {
   Dimension,
   DimensionArray,
   DimensionObject,
-  Endpoints, IGrid, NodeBalanceArea, NodeLocation, NodeRegistryEntry,
+  Endpoints, IGrid, NodeBalanceArea, NodeLocation,
 } from './grid.types';
 
 import { INodeAttributes, NodeType } from './NodeAttributes';
@@ -36,17 +36,6 @@ function checkBounds(
   }
 
   return isWithinBounds;
-}
-/**
- * Check if a node is already registered in the grid
- * @param location the location of the node in the grid
- * @returns NodeResistryEntry | undefined
- */
-export function nodeIsRegistered(
-  grid: IGrid,
-  location: NodeLocation,
-): NodeRegistryEntry | undefined {
-  return grid.nodeRegistry.find((nodeEntry) => nodeEntry.location === location);
 }
 
 /**
@@ -92,6 +81,29 @@ export function getAbsoluteLocation(
   return [row, col];
 }
 
+export function stringifyLocation(row: number, col: number): string {
+  return `${row.toString()}:${col.toString()}`;
+}
+
+export function stringifyLocationObject(location: NodeLocation): string {
+  if (location.row === undefined || location.col === undefined) {
+    throw new Error('Location object must contain row and col properties');
+  }
+
+  const tmp = getAbsoluteLocation(null, location, false);
+  return stringifyLocation(...tmp);
+}
+
+/**
+ * Check if a node is already registered in the grid
+ * @param targetLocation the location of the node in the grid
+ * @returns NodeResistryEntry | undefined
+ */
+export function nodeIsRegistered(grid: IGrid, targetLocation: NodeLocation) {
+  // return grid.nodeRegistry.find((nodeEntry) => nodeEntry.locatyion === location);
+  return grid.nodeRegistry.get(stringifyLocationObject(targetLocation));
+}
+
 /**
    * Get the distance of a node to each edge of the grid
    * @param location the location of the node in the grid
@@ -129,10 +141,12 @@ export function findEndpoints(grid: IGrid): Endpoints {
     }
   };
 
-  // check the occupied nodes first
+  // check the node registry  first
   // eslint-disable-next-line no-restricted-syntax
   for (const nodeEntry of grid.nodeRegistry) {
-    setIfEndpoint(nodeEntry.node, nodeEntry.location);
+    const [node, location] = nodeEntry;
+
+    setIfEndpoint(node, location);
 
     if (localEndpoints[0] && localEndpoints[1]) {
       return localEndpoints;
@@ -227,17 +241,9 @@ export function parseDimension(dimension: Dimension, delimiter?: string): Dimens
   throw new Error('Invalid dimension format');
 }
 
-export function stringifyLocation(row: number, col: number): string {
-  return `${row.toString()}:${col.toString()}`;
-}
-
-export function stringifyLocationObject(location: NodeLocation): string {
-  if (location.row === undefined || location.col === undefined) {
-    throw new Error('Location object must contain row and col properties');
-  }
-
-  const tmp = getAbsoluteLocation(null, location, false);
-  return stringifyLocation(...tmp);
+export function parseCoordinate(coordinate: string, delimiter?: string): NodeLocation {
+  const [row, col] = parseDimension(coordinate, delimiter);
+  return { ...DefaultNodeLocation, row, col };
 }
 
 /* function calculateDAndD2(grid: IGrid): { D: number, D2: number } {

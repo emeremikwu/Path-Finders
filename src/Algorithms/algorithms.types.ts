@@ -1,6 +1,6 @@
 import { NodeLocation } from '../Grid/grid.types';
 
-export enum Algorithm {
+export enum AlgorithmType {
   dijkstra = 'Dijkstra',
   aStar = 'A*',
   bfs = 'Breath First Search',
@@ -8,7 +8,7 @@ export enum Algorithm {
 }
 
 export interface AlgorithmResult {
-  algorithm: Algorithm,
+  algorithm: AlgorithmType,
   shortestPath?: NodeLocation[],
   distance?: number,
   visitedNodes: NodeLocation[],

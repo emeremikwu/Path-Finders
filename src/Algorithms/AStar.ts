@@ -2,7 +2,7 @@ import { Comparator, Heap } from 'heap-js';
 import { IGrid, NodeLocation } from '../Grid/grid.types';
 import { stringifyLocationObject } from '../Grid/utils';
 import {
-  Algorithm, AlgorithmResult, AStarDS,
+  AlgorithmType, AlgorithmResult, AStarDS,
 } from './algorithms.types';
 import { getNeighbors } from './utils';
 import { NodeType } from '../Grid/NodeAttributes';
@@ -32,7 +32,7 @@ function tracePath(nodeDetailsGrid: AStarDS[][], destinationNode: AStarDS): Node
 // min heap
 const AStarPriorityComparator: Comparator<AStarDS> = (a, b) => a.f - b.f;
 
-async function AStar(grid: IGrid, diagonalMovement = false): Promise<AlgorithmResult> {
+export async function aStar(grid: IGrid, diagonalMovement = true): Promise<AlgorithmResult> {
   const [rows, cols] = grid.shape;
   const orderedVisitedNodes: NodeLocation[] = [];
   const [startLocation, endLocation] = grid.endpoints;
@@ -69,7 +69,7 @@ async function AStar(grid: IGrid, diagonalMovement = false): Promise<AlgorithmRe
   }
 
   const results: AlgorithmResult = {
-    algorithm: Algorithm.aStar,
+    algorithm: AlgorithmType.aStar,
     visitedNodes: orderedVisitedNodes,
   };
 
@@ -110,6 +110,7 @@ async function AStar(grid: IGrid, diagonalMovement = false): Promise<AlgorithmRe
       // if the node is a wall, skip it
       if (neighborNode?.type === NodeType.wall) return;
       // if destination node has already been found, skip the rest of the loop
+      orderedVisitedNodes.push(neighbor);
 
       const heuristicCB = diagonalMovement ? diagonalDistance : manhattanDistance;
       const gScore = currentNode.g + neighborNode.weight;
@@ -135,4 +136,4 @@ async function AStar(grid: IGrid, diagonalMovement = false): Promise<AlgorithmRe
   return results;
 }
 
-export default AStar;
+export default aStar;

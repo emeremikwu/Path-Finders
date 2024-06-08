@@ -51,7 +51,7 @@ function DimensionGraph({
       // puts the line at the bottom, offset of the box + height of the box + some
       setXBarOffset((prev) => ({
         ...prev,
-        top: offsetTop + boundingBox.height + 4,
+        top: offsetTop + boundingBox.height + 8,
         width: boundingBox.width,
         display: 'block',
       }));
