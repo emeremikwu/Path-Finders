@@ -1,6 +1,6 @@
 import { NodeLocation } from '../Grid/grid.types';
 
-export enum AlgorithmType {
+export const enum AlgorithmType {
   dijkstra = 'Dijkstra',
   aStar = 'A*',
   // bfs = 'Breath First Search',
