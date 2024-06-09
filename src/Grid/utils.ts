@@ -99,7 +99,7 @@ export function stringifyLocationObject(location: NodeLocation): string {
  * @param targetLocation the location of the node in the grid
  * @returns NodeResistryEntry | undefined
  */
-export function nodeIsRegistered(grid: IGrid, targetLocation: NodeLocation) {
+export function getNodeFromRegistry(grid: IGrid, targetLocation: NodeLocation) {
   // return grid.nodeRegistry.find((nodeEntry) => nodeEntry.locatyion === location);
   return grid.nodeRegistry.get(stringifyLocationObject(targetLocation));
 }
@@ -144,9 +144,9 @@ export function findEndpoints(grid: IGrid): Endpoints {
   // check the node registry  first
   // eslint-disable-next-line no-restricted-syntax
   for (const nodeEntry of grid.nodeRegistry) {
-    const [node, location] = nodeEntry;
+    const [, { location, attributes }] = nodeEntry;
 
-    setIfEndpoint(node, location);
+    setIfEndpoint(attributes, location);
 
     if (localEndpoints[0] && localEndpoints[1]) {
       return localEndpoints;
@@ -157,7 +157,8 @@ export function findEndpoints(grid: IGrid): Endpoints {
   for (let r = 0; r < grid.shape[0]; r += 1) {
     for (let c = 0; c < grid.shape[1]; c += 1) {
       const node = grid.nodes[r][c];
-      if (nodeIsRegistered(grid, { ...DefaultNodeLocation, row: r, col: c })?.node === node) {
+
+      if (getNodeFromRegistry(grid, { ...DefaultNodeLocation, row: r, col: c })) {
         // eslint-disable-next-line no-continue
         continue;
       }

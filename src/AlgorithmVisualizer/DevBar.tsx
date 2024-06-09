@@ -81,7 +81,8 @@ function setRandomEndpoints(_event: MouseEvent<HTMLButtonElement>, dispach: Reac
   });
 
   modifiedNodes.forEach((node) => {
-    console.log(`Node: ${stringifyLocationObject(node.location)} Type: ${node.attributes.type}`);
+    const loc = Array.isArray(node.location) ? node.location[0] : node.location;
+    console.log(`Node: ${stringifyLocationObject(loc)} Type: ${node.attributes.type}`);
   });
 }
 

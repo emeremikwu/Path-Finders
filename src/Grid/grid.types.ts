@@ -22,7 +22,7 @@ export type EndpointType = NodeType.start | NodeType.end;
 type NodeCoordinate = string;
 export interface NodeRegistryEntry {
   location: NodeLocation,
-  attributes: Partial<INodeAttributes>
+  attributes: INodeAttributes
 }
 
 export type NodeRegistry = Map<NodeCoordinate, NodeRegistryEntry>;

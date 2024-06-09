@@ -34,9 +34,9 @@ function Index(props: PropsWithChildren<IndexProps>) {
   } = useGrid(dimension);
 
   const gridDisplayerRef = useRef<HTMLDivElement>(null);
-  const [currentAlgorithm, setAlgorithm] = useState(AlgorithmType.dijkstra);
-  const [playbackSpeed, setPlaybackSpeed] = useState(1);
-  const nodeSelectorType = useRef();
+  const [, setAlgorithm] = useState(AlgorithmType.dijkstra);
+  const [, setPlaybackSpeed] = useState(1);
+  // const nodeSelectorType = useRef();
 
   const memoizedContextObject = useMemo(() => ({
     grid, setGrid, updateDimensions, setNode, getNode,
