@@ -1,6 +1,6 @@
 import { IGrid, NodeLocation } from '../Grid/grid.types';
 import { getNode } from '../Grid/mutaters';
-import { NodeType } from '../Grid/NodeAttributes';
+import { NodeType } from '../Grid/nodeAttributes';
 import {
   stringifyLocation, stringifyLocationObject,
 } from '../Grid/utils';

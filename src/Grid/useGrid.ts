@@ -9,7 +9,7 @@ import {
   IGrid,
 } from './grid.types';
 import { createGrid, setNode } from './mutaters';
-import { INodeAttributes, NodeType } from './NodeAttributes';
+import { NodeAttributes, NodeType } from './nodeAttributes';
 import { DefaultNodeLocation } from './grid.defaults';
 import { getAbsoluteLocation, parseDimension } from './utils';
 
@@ -26,7 +26,7 @@ const updateGridDimensions = (
 
 const setGridNode = (
   dispatch: Dispatch<SetStateAction<IGrid>>,
-) => (row: number, col: number, attributes: Partial<INodeAttributes>) => {
+) => (row: number, col: number, attributes: Partial<NodeAttributes>) => {
   dispatch((prev) => {
     const newGrid = { ...prev };
     const location: NodeLocation = {

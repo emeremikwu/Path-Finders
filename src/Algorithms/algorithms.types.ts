@@ -15,7 +15,6 @@ export interface AlgorithmResult {
 }
 
 // A Star Data Structure
-
 export interface AStarDS {
   f: number;
   g: number;

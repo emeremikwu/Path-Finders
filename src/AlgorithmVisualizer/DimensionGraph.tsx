@@ -56,6 +56,7 @@ function DimensionGraph({
         display: 'block',
       }));
 
+      // puts the line at the right, offset of the box + width of the box + some
       setYBarOffset((prev) => ({
         ...prev,
         left: offsetLeft + boundingBox.width + 8,

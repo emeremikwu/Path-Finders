@@ -3,7 +3,7 @@ import {
   useState,
 } from 'react';
 import Node from './Node';
-import { NodeType } from '../Grid/NodeAttributes';
+import { NodeType } from '../Grid/nodeAttributes';
 import { GridContext } from '../Grid/GridProvider';
 import { stringifyLocation } from '../Grid/utils';
 
