@@ -2,6 +2,8 @@
 
 A collection of algorithms using a grid-based and variable weight implementation.
 
+As of now, the project is still in development. While a majority of the functionality is written, the remaining work involves displaying everything nicely.
+
 This web application is written in TypeScript and uses the following libraries:
 
 - [heap-js](https://www.npmjs.com/package/heap-js);
