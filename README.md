@@ -1,8 +1,8 @@
 # Path Finders
 
-A collection of algorithms using a grid based and variable weight implementation'
+A collection of algorithms using a grid-based and variable weight implementation.
 
-This web application is written in TypeScript and uses the following libraries below.
+This web application is written in TypeScript and uses the following libraries:
 
 - [heap-js](https://www.npmjs.com/package/heap-js);
 - React Bootstrap
@@ -11,7 +11,7 @@ This web application is written in TypeScript and uses the following libraries b
 ## The following algorithms are showecased
 
 ### Implemented
-- Dikstras
+- Dikstra's
 - A*
 
 ### Planned
@@ -21,12 +21,15 @@ This web application is written in TypeScript and uses the following libraries b
 
 ## Running the WebApp
 
-To run the web application you can either visit the link below or clone the repository
+You can run the web application by either visiting the link below or cloning the repository.
 
-### Link 
+### Online 
 - [Path Finders](https://emeremikwu.github.io/Path-Finders/)
 
 ### Local 
+To run the application locally, use the following commands:
+
+
 
 ```
 npm install
