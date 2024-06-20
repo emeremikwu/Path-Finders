@@ -11,6 +11,7 @@ import './DevBar.css';
 import { useAlgorithm } from '../Algorithms';
 import { clearNodes, setNode } from '../Grid/mutaters';
 import { AlgorithmType } from '../Algorithms/algorithms.types';
+import { useTheme } from '../ThemeProvider';
 
 function printDebugInfo(grid: IGrid): void {
   const dimensions = grid.shape;
@@ -121,6 +122,8 @@ function DevBar() {
   const {
     isRunning, runAlgorithm, results, algorithm,
   } = useAlgorithm(grid);
+
+  const { current } = useTheme();
 
   useEffect(() => {
     if (results) console.log(results);

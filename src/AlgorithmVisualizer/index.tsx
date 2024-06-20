@@ -11,7 +11,7 @@ import DimensionGraph from './DimensionGraph';
 
 import GridDisplayer from './GridDisplayer';
 import GridProvider from '../Grid/GridProvider';
-import GridController from './GridController';
+import GridController from './GridNavController';
 import { Dimension } from '../Grid/grid.types';
 import { AlgorithmType } from '../Algorithms/algorithms.types';
 
@@ -48,7 +48,6 @@ function Index(props: PropsWithChildren<IndexProps>) {
   // setStartEndNodes(setGridNodes);
   return (
     <ThemeProvider>
-
       <GridProvider gridContextObject={memoizedContextObject}>
         <GridController references={references} />
         <div className="grid-container">

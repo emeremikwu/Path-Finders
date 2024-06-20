@@ -5,20 +5,20 @@ import Container from 'react-bootstrap/Container';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { AlgorithmType } from '../Algorithms/algorithms.types';
 
-interface GridControllerProps {
+interface GridNavController {
   references : {
     setAlgorithm: React.Dispatch<React.SetStateAction<AlgorithmType>>,
     setPlaybackSpeed: React.Dispatch<React.SetStateAction<number>>,
   }
 }
 
-function GridController({ references }: GridControllerProps) {
-  const { setAlgorithm, setPlaybackSpeed } = references;
+function GridNavController({ references }: GridNavController) {
+  // const { setAlgorithm, setPlaybackSpeed } = references;
   return (
-    <Navbar className="bg-body-tertiary p-2" bg="dark" expand="lg" data-bs-theme="dark">
+    <Navbar className="bg-body-tertiary p-2" expand="lg">
       <Container fluid>
         <Navbar.Brand>Path Finders</Navbar.Brand>
-        <Nav className="me-auto">
+        {/* <Nav className="me-auto">
           <NavDropdown title="Algorithms" id="basic-nav-dropdown">
             {
               Object.values(AlgorithmType).map((algorithm) => (
@@ -36,11 +36,11 @@ function GridController({ references }: GridControllerProps) {
             <NavDropdown.Item onClick={() => { setPlaybackSpeed(2); }}>2x</NavDropdown.Item>
             <NavDropdown.Item onClick={() => { setPlaybackSpeed(3); }}>3x</NavDropdown.Item>
           </NavDropdown>
-        </Nav>
+        </Nav> */}
       </Container>
     </Navbar>
   );
 }
 
-const MemoizedGridController = memo(GridController);
-export default MemoizedGridController;
+const MemoizedGridNavController = memo(GridNavController);
+export default MemoizedGridNavController;

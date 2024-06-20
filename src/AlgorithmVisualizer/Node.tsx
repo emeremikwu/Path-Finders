@@ -54,7 +54,7 @@ function Node(props: PropsWithChildren<NodeProps>) {
       onMouseDown={clickHandler}
       onMouseEnter={mouseEnterHandler}
     >
-      <span>{weight > 1 ? weight : ''}</span>
+      <span className="fade-in">{weight > 1 ? weight : ''}</span>
     </div>
   );
 }

@@ -4,17 +4,19 @@
   align-items: center;
   width: 30px;
   height: 30px;
-  /* border: 1px solid black; */
-  border-top: 1px solid black;
-  border-left: 1px solid black;
-  box-sizing: border-box;
-  background-color: white;
   margin: 0;
   padding: 0;
-  /* transition: background-color 0.2s; */
+  
+  border-color: var(--bs-body-color);
+  background-color: var(--bs-body-bg);
+  border-width: 1px;
+  border-top-style: solid;
+  border-left-style: solid;
+
+  /* box-sizing: border-box; */
+  transition: background-color 0.2s;
 
 }
-
 
 .node span {
   width: 100%;
@@ -26,11 +28,12 @@
 }
 
 .node.end-of-row {
-  border-bottom: 1px solid black;
+  /* border-bottom: 1px solid black; */
+  border-bottom-style: solid;
 }
 
 .node.end-of-col {
-  border-right: 1px solid black;
+  border-right-style: solid;
 }
 
 .node.start {
@@ -42,11 +45,13 @@
 }
 
 .node.wall {
-  background-color: black;
+  background-color: var(--bs-body-color);
 }
 
 .node.visited {
   background-color: lightblue;
+  color: black;
+  border-color: black;
 }
 
 .node.shortest-path {
