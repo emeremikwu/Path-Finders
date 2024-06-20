@@ -1,30 +1,40 @@
 # Path Finders
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A collection of algorithms using a grid-based and variable weight implementation.
 
-Currently, two official plugins are available:
+As of now, the project is still in development. While a majority of the functionality is written, the remaining work involves displaying everything nicely.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This web application is written in TypeScript and uses the following libraries:
 
-## Expanding the ESLint configuration
+- [heap-js](https://www.npmjs.com/package/heap-js);
+- React Bootstrap
+- Router Dom
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## The following algorithms are showecased
 
-- Configure the top-level `parserOptions` property like this:
+### Implemented
+- Dikstra's
+- A*
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+### Planned
+- Breath First Search
+- Dept First Search
+
+
+## Running the WebApp
+
+You can run the web application by either visiting the link below or cloning the repository.
+
+### Online 
+- [Path Finders](https://emeremikwu.github.io/Path-Finders/)
+
+### Local 
+To run the application locally, use the following commands:
+
+
+
 ```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+npm install
+npm run build
+npm run preview
+```

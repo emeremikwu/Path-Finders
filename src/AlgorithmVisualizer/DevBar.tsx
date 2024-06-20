@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { MouseEvent, useContext, useEffect } from 'react';
 import { GridContext } from '../Grid/GridProvider';
-import { INodeAttributes, NodeType } from '../Grid/NodeAttributes';
+import { NodeAttributes, NodeType } from '../Grid/nodeAttributes';
 import { IGrid, NodeLocation } from '../Grid/grid.types';
 import { findEndpoints, getAbsoluteLocation, stringifyLocationObject } from '../Grid/utils';
 
@@ -157,7 +157,7 @@ function DevBar() {
 
   // animated algorithm;
   useEffect(() => {
-    let interval: number;
+    let interval: NodeJS.Timeout;
     if (results) {
       const resultsCopy = { ...results };
 
@@ -173,7 +173,7 @@ function DevBar() {
       const shortestPathSpliceAmount = 1;
       interval = setInterval(() => {
         let location: NodeLocation[] | null;
-        let attributes: Partial<INodeAttributes> | null;
+        let attributes: Partial<NodeAttributes> | null;
 
         if (resultsCopy.visitedNodes.length > 0) {
           location = resultsCopy.visitedNodes.splice(0, visitedSpliceAmount)!;

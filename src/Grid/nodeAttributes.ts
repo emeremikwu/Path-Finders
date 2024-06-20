@@ -13,7 +13,7 @@ export enum NodeType {
   weighted = 'weighted',
 }
 
-export interface INodeAttributes {
+export interface NodeAttributes {
   type: NodeType;
   visited: boolean;
   weight: number;
@@ -23,6 +23,6 @@ export function initializeNode(
   type = NodeType.default,
   weight = 1,
   visited = false,
-): INodeAttributes {
+): NodeAttributes {
   return { type, weight, visited };
 }

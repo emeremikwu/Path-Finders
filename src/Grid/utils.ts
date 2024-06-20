@@ -7,7 +7,7 @@ import {
   Endpoints, IGrid, NodeBalanceArea, NodeLocation,
 } from './grid.types';
 
-import { INodeAttributes, NodeType } from './NodeAttributes';
+import { NodeAttributes, NodeType } from './nodeAttributes';
 
 /**
  * Check if the row and column are within the bounds of the grid
@@ -135,7 +135,7 @@ export function findEndpoints(grid: IGrid): Endpoints {
   const localEndpoints: Endpoints = [undefined, undefined];
 
   // local function to check if the node is a start or end node
-  const setIfEndpoint = (node: INodeAttributes, location: NodeLocation) => {
+  const setIfEndpoint = (node: NodeAttributes, location: NodeLocation) => {
     if (node.type === NodeType.start || node.type === NodeType.end) {
       localEndpoints[node.type === NodeType.start ? 0 : 1] = location;
     }
@@ -294,6 +294,7 @@ export function parseCoordinate(coordinate: string, delimiter?: string): NodeLoc
   return { D, D2 };
 }
  */
+
 /**
  * Calculates the area of the grid that nodes are occupying.
  * This is useful for balancing the grid when adding or removing rows and columns

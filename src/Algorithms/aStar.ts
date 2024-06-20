@@ -5,7 +5,7 @@ import {
   AlgorithmType, AlgorithmResult, AStarDS,
 } from './algorithms.types';
 import { getNeighbors } from './utils';
-import { NodeType } from '../Grid/NodeAttributes';
+import { NodeType } from '../Grid/nodeAttributes';
 import { getNode } from '../Grid/mutaters';
 import { diagonalDistance, manhattanDistance } from './heuristics';
 import { DefaultNodeLocation } from '../Grid/grid.defaults';
@@ -127,11 +127,6 @@ export async function aStar(grid: IGrid, diagonalMovement = true): Promise<Algor
       }
     });
   }
-
-  /* const result: AlgorithmResult = {
-    algorithm: Algorithm.aStar,
-    visitedNodes,
-  }; */
 
   return results;
 }

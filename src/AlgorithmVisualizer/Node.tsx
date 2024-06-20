@@ -2,7 +2,7 @@
 import {
   PropsWithChildren, RefObject, useCallback, useContext,
 } from 'react';
-import { INodeAttributes, NodeType } from '../Grid/NodeAttributes';
+import { NodeAttributes, NodeType } from '../Grid/nodeAttributes';
 import './Node.css';
 import { GridContext } from '../Grid/GridProvider';
 
@@ -10,7 +10,7 @@ interface NodeProps {
   id: string | undefined
   endOfRow?: boolean
   endOfCol?: boolean
-  nodeAttributes: INodeAttributes
+  nodeAttributes: NodeAttributes
   // references the node type to change to when the user clickes a node,
   setType: RefObject<NodeType>
   isLeftMouseDown: boolean
@@ -25,7 +25,7 @@ function Node(props: PropsWithChildren<NodeProps>) {
 
   const clickHandler = useCallback(() => {
     const [currentRow, currentCol] = id!.split(':').map((val) => Number(val));
-    const attributes: Partial<INodeAttributes> = { type: setType.current!, weight: 1 };
+    const attributes: Partial<NodeAttributes> = { type: setType.current!, weight: 1 };
 
     setNode(currentRow, currentCol, attributes);
     console.log(`Node ${id} clicked. Current set type: ${setType.current}`);
@@ -54,7 +54,7 @@ function Node(props: PropsWithChildren<NodeProps>) {
       onMouseDown={clickHandler}
       onMouseEnter={mouseEnterHandler}
     >
-      <span>{weight > 1 ? weight : ''}</span>
+      <span className="fade-in">{weight > 1 ? weight : ''}</span>
     </div>
   );
 }

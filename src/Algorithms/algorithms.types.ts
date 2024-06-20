@@ -24,4 +24,9 @@ export interface AStarDS {
   previousNode: NodeLocation | null;
 }
 
+export interface DikstrasDS {
+  distance: number;
+  location: NodeLocation;
+}
+
 export type HeuristicFN = (start: NodeLocation, end: NodeLocation) => number;

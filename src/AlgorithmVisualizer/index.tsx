@@ -11,12 +11,13 @@ import DimensionGraph from './DimensionGraph';
 
 import GridDisplayer from './GridDisplayer';
 import GridProvider from '../Grid/GridProvider';
-import GridController from './GridController';
+import GridController from './GridNavController';
 import { Dimension } from '../Grid/grid.types';
 import { AlgorithmType } from '../Algorithms/algorithms.types';
 
 import './index.css';
 import './Grid.css';
+import { ThemeProvider } from '../ThemeProvider';
 
 interface IndexProps {
   dimension?: Dimension
@@ -46,14 +47,16 @@ function Index(props: PropsWithChildren<IndexProps>) {
 
   // setStartEndNodes(setGridNodes);
   return (
-    <GridProvider gridContextObject={memoizedContextObject}>
-      <GridController references={references} />
-      <div className="grid-container">
-        <GridDisplayer ref={gridDisplayerRef} />
-        <DimensionGraph GridDisplayerRef={gridDisplayerRef} />
-      </div>
-      <DevBar />
-    </GridProvider>
+    <ThemeProvider>
+      <GridProvider gridContextObject={memoizedContextObject}>
+        <GridController references={references} />
+        <div className="grid-container">
+          <GridDisplayer ref={gridDisplayerRef} />
+          <DimensionGraph GridDisplayerRef={gridDisplayerRef} />
+        </div>
+        <DevBar />
+      </GridProvider>
+    </ThemeProvider>
   );
 }
 

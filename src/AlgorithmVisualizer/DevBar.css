@@ -25,9 +25,11 @@
 }
 
 .dev-button {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+
   margin: 5px;
   padding: 5px;
-  background-color: white;
   border: 1px solid black;
   border-radius: 5px;
 }

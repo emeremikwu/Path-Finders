@@ -16,7 +16,7 @@ import {
   AddColPosition,
 } from './grid.types';
 
-import { INodeAttributes, initializeNode, NodeType } from './NodeAttributes';
+import { NodeAttributes, initializeNode, NodeType } from './nodeAttributes';
 import { getAbsoluteLocation, stringifyLocationObject } from './utils';
 
 let mutateOriginal = false;
@@ -30,17 +30,17 @@ export function getMutateOriginal(): boolean {
 }
 
 /**
- * Creates a 2 dimensional array of INodeAttributes (rows x cols)
+ * Creates a 2 dimensional array of NodeAttributes (rows x cols)
  * @param rows
  * @param cols
- * @returns INodeAttributes[][]
+ * @returns NodeAttributes[][]
  */
 export function createAttributeArray(rows: number, cols: number): GridState {
   // this took me forever to properly annotate.
-  return Array.from<object, INodeAttributes[]>(
+  return Array.from<object, NodeAttributes[]>(
     { length: rows },
     () => (
-      Array.from<object, INodeAttributes>(
+      Array.from<object, NodeAttributes>(
         { length: cols },
         () => initializeNode(),
       )
@@ -158,7 +158,7 @@ export function updateShape(oGrid: IGrid): IGrid {
  * @param location location of the node in the grid
  * @returns NodeAttributes | undefined
  */
-export function getNode(grid: IGrid, location: NodeLocation): INodeAttributes | undefined {
+export function getNode(grid: IGrid, location: NodeLocation): NodeAttributes | undefined {
   const [row, col] = getAbsoluteLocation(grid, location);
   return grid.nodes[row][col];
 }
@@ -168,14 +168,14 @@ export function getNode(grid: IGrid, location: NodeLocation): INodeAttributes | 
  * @param grid The grid to update
  * @param location The location or locations of the node in the grid
  * @param attributes The attributes to update the node with
- * @returns { location: NodeLocation | NodeLocation[], attributes: Partial<INodeAttributes>}
+ * @returns { location: NodeLocation | NodeLocation[], attributes: Partial<NodeAttributes>}
  *  The location and attributes of the node that was updated
  */
 export function setNode(
   grid: IGrid,
   location: NodeLocation | NodeLocation[],
-  attributes: Partial<INodeAttributes>,
-): { location: NodeLocation | NodeLocation[], attributes: Partial<INodeAttributes> } {
+  attributes: Partial<NodeAttributes>,
+): { location: NodeLocation | NodeLocation[], attributes: Partial<NodeAttributes> } {
   // Destructure the attributes
   const { type, weight, visited } = attributes;
   const normalizedLocation = Array.isArray(location) ? location : [location];
@@ -239,7 +239,7 @@ interface NodeParams {
 export function clearNodes(grid: IGrid, params?: NodeParams, useCache = false): IGrid {
   const { type, visited, weight } = params ?? {};
 
-  const resetObject: Partial<INodeAttributes> = {};
+  const resetObject: Partial<NodeAttributes> = {};
 
   if (type === true || type === undefined) resetObject.type = NodeType.default;
   if (visited === true || visited === undefined) resetObject.visited = false;

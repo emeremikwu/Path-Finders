@@ -1,20 +1,19 @@
+import Heap, { Comparator } from 'heap-js';
 import { IGrid, NodeLocation } from '../Grid/grid.types';
 import { getNode } from '../Grid/mutaters';
-import { NodeType } from '../Grid/NodeAttributes';
+import { NodeType } from '../Grid/nodeAttributes';
 import {
   stringifyLocation, stringifyLocationObject,
 } from '../Grid/utils';
-import { AlgorithmType, AlgorithmResult } from './algorithms.types';
+import { AlgorithmType, AlgorithmResult, DikstrasDS } from './algorithms.types';
 import { getNeighbors } from './utils';
 // TODO - Implement Dikstra's Algorithm
 // [ ] - remove unknown and replace with AlgorithmResult
 
 let rowCount: number;
 let colCount: number;
-const priorityQueueComparator = (
-  a: { distance: number },
-  b: { distance: number },
-) => a.distance - b.distance;
+
+const priorityQueueComparator: Comparator<DikstrasDS> = (a, b) => a.distance - b.distance;
 
 /**
  * Priority Queue(min heap) based implementation for Dikstra's Algorithm
@@ -35,7 +34,8 @@ export async function dikstras(grid: IGrid): Promise<AlgorithmResult | null> {
   const visitedNodesOrdered: NodeLocation[] = []; // this is for visualization
   const previousNode = new Map<string, NodeLocation | null>();
   const distances = new Map<string, number>(); // distance from start node
-  const priorityQueue: { location: NodeLocation, distance: number }[] = [];
+  // const priorityQueue: { location: NodeLocation, distance: number }[] = [];
+  const priorityQueue = new Heap(priorityQueueComparator); // min heap
 
   [rowCount, colCount] = [grid.nodes.length, grid.nodes[0].length];
 
@@ -58,8 +58,8 @@ export async function dikstras(grid: IGrid): Promise<AlgorithmResult | null> {
   priorityQueue.push({ location: startLocation, distance: 0 });
 
   while (priorityQueue.length > 0) {
-    priorityQueue.sort(priorityQueueComparator);
-    const currentNode = priorityQueue.shift()!;
+    // priorityQueue.sort(priorityQueueComparator);
+    const currentNode = priorityQueue.pop()!;
     const currentNodeKey = stringifyLocationObject(currentNode.location);
     const currentNodeDist = distances.get(currentNodeKey)!;
 

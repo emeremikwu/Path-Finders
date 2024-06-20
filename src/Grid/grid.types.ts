@@ -1,10 +1,10 @@
-import { INodeAttributes, NodeType } from './NodeAttributes';
+import { NodeAttributes, NodeType } from './nodeAttributes';
 
 export interface DimensionObject { rows: number, cols: number }
 export type DimensionArray = [number, number];
 export type DimensionString = string;
 export type Dimension = DimensionObject | DimensionArray | DimensionString;
-export type GridState = INodeAttributes[][];
+export type GridState = NodeAttributes[][];
 
 export type AddRowPosition = 'top' | 'bottom';
 export type AddColPosition = 'left' | 'right';
@@ -22,7 +22,7 @@ export type EndpointType = NodeType.start | NodeType.end;
 type NodeCoordinate = string;
 export interface NodeRegistryEntry {
   location: NodeLocation,
-  attributes: INodeAttributes
+  attributes: NodeAttributes
 }
 
 export type NodeRegistry = Map<NodeCoordinate, NodeRegistryEntry>;
@@ -54,7 +54,7 @@ export interface IGrid {
   grid: IGrid,
   setGrid: Dispatch<SetStateAction<IGrid>>
   updateDimensions: (rows: number, cols: number) => void
-  setNode: (row: number, col: number, attributes: Partial<INodeAttributes>) => void
+  setNode: (row: number, col: number, attributes: Partial<NodeAttributes>) => void
   getNode: (row: number, col: number, startFromOne: boolean) => NodeType
 }
  */

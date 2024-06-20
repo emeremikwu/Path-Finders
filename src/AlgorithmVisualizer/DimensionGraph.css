@@ -21,8 +21,9 @@
 }
 
 .dimension-graph hr { 
-  color: var();
-  border: 1px solid black;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--bs-body-color);
   margin: 0;
   border-radius: 10px;
 }
