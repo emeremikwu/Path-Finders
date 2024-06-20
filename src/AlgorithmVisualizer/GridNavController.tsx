@@ -5,14 +5,15 @@ import Container from 'react-bootstrap/Container';
 // import NavDropdown from 'react-bootstrap/NavDropdown';
 import { AlgorithmType } from '../Algorithms/algorithms.types';
 
-interface GridNavController {
+interface GridNavControllerProps {
   references : {
     setAlgorithm: React.Dispatch<React.SetStateAction<AlgorithmType>>,
     setPlaybackSpeed: React.Dispatch<React.SetStateAction<number>>,
   }
 }
 
-function GridNavController({ references }: GridNavController) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function GridNavController({ references }: GridNavControllerProps) {
   // const { setAlgorithm, setPlaybackSpeed } = references;
   return (
     <Navbar className="bg-body-tertiary p-2" expand="lg">
