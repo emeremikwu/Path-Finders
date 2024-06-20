@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 // import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
@@ -12,9 +12,11 @@ interface GridNavControllerProps {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function GridNavController({ references }: GridNavControllerProps) {
   // const { setAlgorithm, setPlaybackSpeed } = references;
+
+  // eslint-disable-next-line no-console, no-constant-condition
+  if (false) console.log(references);
   return (
     <Navbar className="bg-body-tertiary p-2" expand="lg">
       <Container fluid>
