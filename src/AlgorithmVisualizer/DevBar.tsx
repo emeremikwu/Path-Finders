@@ -157,7 +157,7 @@ function DevBar() {
 
   // animated algorithm;
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: number;
     if (results) {
       const resultsCopy = { ...results };
 
@@ -171,7 +171,7 @@ function DevBar() {
 
       const visitedSpliceAmount = 4;
       const shortestPathSpliceAmount = 1;
-      interval = setInterval(() => {
+      interval = window.setInterval(() => {
         let location: NodeLocation[] | null;
         let attributes: Partial<NodeAttributes> | null;
 
