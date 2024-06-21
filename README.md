@@ -37,8 +37,13 @@ All current functions are accessible via the development bar at the bottom, whic
   - Selects the current algorithm to run once the "Run" button is pressed.
 - Click Action
   - Sets a 'wall' on a clicked node
-
+ 
 The remaining buttons are for debugging purposes.
+
+### Recommended Button Order (for now) 
+1. Set Random Endpoints (until desired positions)
+2. Set Random Weights *optional*
+3. Select algorithm and Run
 
 ### Known Issues
 - Pressing the "Run" button without setting start and end nodes causes it to get stuck in "running".
