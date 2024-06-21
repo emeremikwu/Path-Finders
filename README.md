@@ -29,9 +29,9 @@ You can run the web application by either visiting the link below or cloning the
 - [Path Finders](https://emeremikwu.github.io/Path-Finders/)
 
 ### Local 
-To run the application locally, use the following commands:
-
-
+1. Download and install the latest version of Node.js.
+2. Clone the repository and navigate to the directory. 
+3. Run the following commands to build and run a local instance.
 
 ```
 npm install
